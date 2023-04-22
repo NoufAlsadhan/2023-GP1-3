@@ -11,13 +11,15 @@ class ManagersLogin extends StatelessWidget {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              leading: const BackButton(
-                color: Colors.white, // <-- SEE HERE
-              ),
+              leading: BackButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
               title: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  'الصفحه الثانيه',
+                  'تسجيل الدخول',
                   style: TextStyle(fontFamily: 'Elmessiri'),
                 ),
               ),
@@ -38,7 +40,7 @@ class ManagersLogin extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 40),
                       child: Image.asset(
-                        'images/logo.jpeg',
+                        'images/logo4.png',
                         height: 150,
                         width: 150,
                       ),
