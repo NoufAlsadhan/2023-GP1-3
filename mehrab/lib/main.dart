@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.0),
         image: DecorationImage(
           image: AssetImage("images/logo5.png"),
           fit: BoxFit.cover,
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-                padding: const EdgeInsets.fromLTRB(20, 80, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
                 child: Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
@@ -65,6 +66,18 @@ class HomePage extends StatelessWidget {
                     );
                   },
                 )),
+            Material(
+              child: Container(
+                  child: InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('images/admin.png'),
+                  fit: BoxFit.cover,
+                  width: 50,
+                  height: 50,
+                ),
+              )),
+            ),
           ],
         ),
       ),
