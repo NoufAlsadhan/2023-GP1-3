@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mehrab/managerslogin.dart';
+import 'package:mehrab/AdminLogin.dart';
 
 void main() {
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()));
@@ -69,7 +70,13 @@ class HomePage extends StatelessWidget {
             Material(
               child: Container(
                   child: InkWell(
-                onTap: () {},
+                onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AdminLogin()),
+                    );
+                },
                 child: Ink.image(
                   image: AssetImage('images/admin.png'),
                   fit: BoxFit.cover,
