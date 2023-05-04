@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mehrab/managerslogin.dart';
 import 'package:mehrab/AdminLogin.dart';
+import 'package:mehrab/prayerlogin.dart';
 
 void main() {
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()));
@@ -46,7 +47,13 @@ class HomePage extends StatelessWidget {
                   ),
                   child: const Text('مصلّـي',
                       style: TextStyle(fontFamily: 'Elmessiri')),
-                  onPressed: () {},
+                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const prayerlogin()),
+                    );
+                  },
                 )),
             Container(
                 height: 80,
