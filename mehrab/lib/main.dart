@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mehrab/managerslogin.dart';
 import 'package:mehrab/AdminLogin.dart';
 import 'package:mehrab/prayerlogin.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()));
 }
 
@@ -25,7 +31,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-                padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 240, 20, 20),
                 child: Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
@@ -47,7 +53,7 @@ class HomePage extends StatelessWidget {
                   ),
                   child: const Text('مصلّـي',
                       style: TextStyle(fontFamily: 'Elmessiri')),
-                   onPressed: () {
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -74,15 +80,17 @@ class HomePage extends StatelessWidget {
                     );
                   },
                 )),
+            SizedBox(
+              height: 130,
+            ),
             Material(
               child: Container(
                   child: InkWell(
                 onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AdminLogin()),
-                    );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AdminLogin()),
+                  );
                 },
                 child: Ink.image(
                   image: AssetImage('images/admin.png'),
