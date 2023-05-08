@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ManagersLogin extends StatelessWidget {
-  const ManagersLogin({super.key});
-  // This widget is the root of your application.
+final TextEditingController _nationalId = TextEditingController();
+final TextEditingController _password = TextEditingController();
+bool _visible = false;
+
+class ManagersLogin extends StatefulWidget {
+  _managersLogin createState() => _managersLogin();
+}
+
+// ignore: camel_case_types
+class _managersLogin extends State<ManagersLogin> {
+  @override
+  void initState() {
+    super.initState();
+    _nationalId.text = '';
+    _password.text = '';
+    _visible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,7 +65,9 @@ class ManagersLogin extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child: TextField(
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _nationalId,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
                             prefixIcon: Icon(Icons.account_circle,
@@ -60,7 +78,7 @@ class ManagersLogin extends StatelessWidget {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: 'البريد الإلكتروني',
+                            labelText: ' رقم الهوية',
                             labelStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontFamily: "Elmessiri",
@@ -94,6 +112,10 @@ class ManagersLogin extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Visibility(
+                        visible: _visible,
+                        child: Text(' جميع الحقول مطلوبة *',
+                            style: TextStyle(color: Colors.red))),
                     Container(
                         height: 80,
                         padding: const EdgeInsets.all(20),
@@ -104,7 +126,12 @@ class ManagersLogin extends StatelessWidget {
                           ),
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_nationalId.text.isEmpty ||
+                                _password.text.isEmpty) {
+                              _toggle();
+                            }
+                          },
                         )),
                     TextButton(
                       onPressed: () {},
@@ -118,5 +145,11 @@ class ManagersLogin extends StatelessWidget {
                 ),
               ),
             )));
+  }
+
+  void _toggle() {
+    setState(() {
+      _visible = true;
+    });
   }
 }
