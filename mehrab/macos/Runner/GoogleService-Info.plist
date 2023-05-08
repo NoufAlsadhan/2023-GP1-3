@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>807418382047-ootlhj9u5suleefnik9abs133k4hbafi.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.807418382047-ootlhj9u5suleefnik9abs133k4hbafi</string>
+	<key>API_KEY</key>
+	<string>AIzaSyABwPlGFaBmlb93jns-kd6gh0Gy9xxwXHo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>807418382047</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.mehrab</string>
+	<key>PROJECT_ID</key>
+	<string>mehrab-6fc17</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mehrab-6fc17.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:807418382047:ios:6d110d05215917a5edcb6a</string>
+	<key>DATABASE_URL</key>
+	<string>https://mehrab-6fc17-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

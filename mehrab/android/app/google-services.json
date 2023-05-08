@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "807418382047",
+    "firebase_url": "https://mehrab-6fc17-default-rtdb.firebaseio.com",
     "project_id": "mehrab-6fc17",
     "storage_bucket": "mehrab-6fc17.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "807418382047-ad65qjkipjeb6t1lli9lbp2dmhjjqjtq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "807418382047-ootlhj9u5suleefnik9abs133k4hbafi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mehrab"
+              }
             }
           ]
         }
