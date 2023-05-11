@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 final _formKey = GlobalKey<FormState>();
 final _controller = TextEditingController();
@@ -537,7 +538,8 @@ class _createAccountsState extends State<createAccounts> {
       String Mphone) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("إلغاء", style: TextStyle(fontFamily: 'Elmessiri')),
+      child: Text("إلغاء",
+          style: TextStyle(fontFamily: 'Elmessiri', color: Colors.red)),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -555,7 +557,8 @@ class _createAccountsState extends State<createAccounts> {
 
         createacc(imamData, muathenData, muathenPassword, imamPassword, Iphone,
             Mphone);
-        Navigator.of(context).pop();
+        Navigator.pop(context);
+        showAlertDialog2();
       },
     );
     // set up the AlertDialog
@@ -567,8 +570,11 @@ class _createAccountsState extends State<createAccounts> {
                 fontFamily: 'Elmessiri',
                 color: Color.fromARGB(255, 20, 5, 87))),
       ),
-      content: Text("هل أنت متأكد من المعلومات المعطاة لإنشاء الحسابات؟",
-          style: TextStyle(fontFamily: 'Elmessiri')),
+      content: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("هل أنت متأكد من المعلومات المعطاة لإنشاء الحسابات؟",
+            style: TextStyle(fontFamily: 'Elmessiri')),
+      ),
       actions: [
         cancelButton,
         continueButton,
@@ -610,13 +616,50 @@ class _createAccountsState extends State<createAccounts> {
         [mphone]);
   }
 
+  showAlertDialog2() {
+    // set up the buttons
+
+    Widget continueButton = TextButton(
+      child: Text("حسنًا", style: TextStyle(fontFamily: 'Elmessiri')),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      title: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("إنشاء حساب",
+            style: TextStyle(
+                fontFamily: 'Elmessiri',
+                color: Color.fromARGB(255, 20, 5, 87))),
+      ),
+      content: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("تم إنشاء كل من حساب الإمام والمؤذن بنجاح!",
+            style: TextStyle(fontFamily: 'Elmessiri')),
+      ),
+      actions: [
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void sending_SMS(String msg, List<String> list_receipents) async {
-    String send_result =
-        await sendSMS(message: msg, recipients: list_receipents)
-            .catchError((err) {
-      print(err);
-    });
-    print(send_result);
+    if (await Permission.sms.request().isGranted) {
+      String send_result = await sendSMS(
+              message: msg, recipients: list_receipents, sendDirect: true)
+          .catchError((err) {
+        print(err);
+      });
+      print(send_result);
+    }
   }
 
   void _isDuplicate(String text) {
