@@ -690,8 +690,8 @@ class _createAccountsState extends State<createAccounts> {
 //_MnameController.text= db.collection("Mosque").doc(_mosquenum.text).get().field()['اسم المؤذن'];
 
           var data = docSnapshot.data();
-          _InameController.text = data!['اسم الإمام'];
-          _MnameController.text = data['اسم المؤذن'];
+          _InameController.text = data!['Imam name'];
+          _MnameController.text = data['Muathen name'];
         } else {
           setState(() {
             DuplicateNum = true;
