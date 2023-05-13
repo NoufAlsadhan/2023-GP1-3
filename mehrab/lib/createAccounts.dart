@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 final _formKey = GlobalKey<FormState>();
 final _controller = TextEditingController();
@@ -41,6 +42,16 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   bool _visible = false;
+  var DuplicateNum = false;
+  var DuplicateNumError = '';
+  var validIdI = true;
+  var validIdM = true;
+  var idErrorMessageI = '';
+  var idErrorMessageM = '';
+  var validPhoneI = true;
+  var validPhoneM = true;
+  var numberErrorMessageI = '';
+  var numberErrorMessageM = '';
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +91,11 @@ class _createAccountsState extends State<createAccounts> {
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
                             controller: _mosquenum,
+                            onFieldSubmitted: _isDuplicate,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
+                              errorText:
+                                  DuplicateNum ? DuplicateNumError : null,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 15),
                               enabledBorder: OutlineInputBorder(
@@ -104,7 +118,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            //enabled: false,
+                            enabled: false,
                             controller: _InameController,
                             decoration: InputDecoration(
                               contentPadding:
@@ -129,10 +143,13 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            enabled: !DuplicateNum,
                             controller: _IidController,
+                            onFieldSubmitted: validateidI,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              errorText: validateid(_IidController.text),
+                              errorText:
+                                  validIdI == false ? idErrorMessageI : null,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 15),
                               enabledBorder: OutlineInputBorder(
@@ -155,10 +172,14 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            enabled: !DuplicateNum,
                             controller: _IphoneController,
+                            onFieldSubmitted: validatuenumI,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              errorText: validatuenum(_IphoneController.text),
+                              errorText: validPhoneI == false
+                                  ? numberErrorMessageI
+                                  : null,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 15),
                               enabledBorder: OutlineInputBorder(
@@ -181,7 +202,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            //enabled: false,
+                            enabled: false,
                             controller: _MnameController,
                             decoration: InputDecoration(
                               contentPadding:
@@ -206,10 +227,13 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            enabled: !DuplicateNum,
                             controller: _MidController,
+                            onFieldSubmitted: validateidM,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              errorText: validateid(_MidController.text),
+                              errorText:
+                                  validIdM == false ? idErrorMessageM : null,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 15),
                               enabledBorder: OutlineInputBorder(
@@ -232,10 +256,14 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            enabled: !DuplicateNum,
                             controller: _MphoneController,
+                            onFieldSubmitted: validatuenumM,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              errorText: validatuenum(_MphoneController.text),
+                              errorText: validPhoneM == false
+                                  ? numberErrorMessageM
+                                  : null,
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 15),
                               enabledBorder: OutlineInputBorder(
@@ -310,13 +338,20 @@ class _createAccountsState extends State<createAccounts> {
                                     _MphoneController.text.length != 10) {
                                   falselength = true;
                                 }
-                                if (empt == false && falselength == false) {
+                                if (empt == false &&
+                                    falselength == false &&
+                                    DuplicateNum == false &&
+                                    validIdI == true &&
+                                    validIdM == true &&
+                                    validPhoneI == true &&
+                                    validPhoneM == true) {
                                   var muathenPassword =
                                       generateRandomPassword();
                                   var hmuathenpassword =
                                       utf8.encode(muathenPassword);
                                   var imamPassword = generateRandomPassword();
                                   var himampassword = utf8.encode(imamPassword);
+                                  bool newP = true;
 
                                   final ImamData = {
                                     "رقم الهوية": _IidController.text,
@@ -327,6 +362,7 @@ class _createAccountsState extends State<createAccounts> {
                                     "كلمة المرور": sha256
                                         .convert(himampassword)
                                         .toString(),
+                                    "جديد": newP,
                                   };
                                   final MuathenData = {
                                     "رقم الهوية": _MidController.text,
@@ -337,6 +373,7 @@ class _createAccountsState extends State<createAccounts> {
                                     "كلمة المرور": sha256
                                         .convert(hmuathenpassword)
                                         .toString(),
+                                    "جديد": newP,
                                   };
                                   showAlertDialog(
                                       context,
@@ -368,19 +405,114 @@ class _createAccountsState extends State<createAccounts> {
     });
   }
 
-  validateid(String text) {
+  validateidI(String text) {
+    var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
-      return "رقم الهوية يجب أن يكون 10 أرقام";
+      setState(() {
+        validIdI = false;
+        idErrorMessageI = "رقم الهوية يجب أن يكون 10 أرقام";
+        v = false;
+      });
     }
 
-    return null;
+    db
+        .collection("Mosque Manager")
+        .where('رقم الهوية', isEqualTo: text)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          validIdI = false;
+          idErrorMessageI = "رقم الهوية لا يمكن استخدامه ";
+          v = false;
+        });
+      }
+    });
+
+    if (v == true) {
+      setState(() {
+        validIdI = true;
+      });
+    }
   }
 
-  validatuenum(String text) {
+  validatuenumI(String text) {
+    var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
-      return "رقم الجوال يجب أن يكون 10 أرقام";
+      setState(() {
+        validPhoneI = false;
+        numberErrorMessageI = 'رقم الجوال يجب أن يكون 10 أرقام';
+        v = false;
+      });
+    } else if (!text.startsWith('05')) {
+      setState(() {
+        validPhoneI = false;
+        numberErrorMessageI = 'رقم الجوال يجب أن يبدأ بـ 05';
+        v = false;
+      });
     }
-    return null;
+
+    if (v == true) {
+      setState(() {
+        validPhoneI = true;
+      });
+    }
+  }
+
+  validateidM(String text) {
+    var v = true;
+    if (!(text.length == 10) && text.isNotEmpty) {
+      setState(() {
+        validIdM = false;
+        idErrorMessageM = "رقم الهوية يجب أن يكون 10 أرقام";
+        v = false;
+      });
+    }
+
+    db
+        .collection("Mosque Manager")
+        .where('رقم الهوية', isEqualTo: text)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          validIdM = false;
+          idErrorMessageM = "رقم الهوية لا يمكن استخدامه ";
+          v = false;
+        });
+      }
+    });
+
+    if (v == true) {
+      setState(() {
+        validIdM = true;
+      });
+    }
+  }
+
+  validatuenumM(String text) {
+    var v = true;
+    if (!(text.length == 10) && text.isNotEmpty) {
+      setState(() {
+        validPhoneM = false;
+        numberErrorMessageM = 'رقم الجوال يجب أن يكون 10 أرقام';
+        v = false;
+      });
+    }
+
+    if (!text.startsWith('05')) {
+      setState(() {
+        validPhoneM = false;
+        numberErrorMessageM = 'رقم الجوال يجب أن يبدأ بـ 05';
+        v = false;
+      });
+    }
+
+    if (v == true) {
+      setState(() {
+        validPhoneM = true;
+      });
+    }
   }
 
   String generateRandomPassword() {
@@ -406,7 +538,8 @@ class _createAccountsState extends State<createAccounts> {
       String Mphone) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("إلغاء", style: TextStyle(fontFamily: 'Elmessiri')),
+      child: Text("إلغاء",
+          style: TextStyle(fontFamily: 'Elmessiri', color: Colors.red)),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -424,7 +557,8 @@ class _createAccountsState extends State<createAccounts> {
 
         createacc(imamData, muathenData, muathenPassword, imamPassword, Iphone,
             Mphone);
-        Navigator.of(context).pop();
+        Navigator.pop(context);
+        showAlertDialog2();
       },
     );
     // set up the AlertDialog
@@ -436,8 +570,11 @@ class _createAccountsState extends State<createAccounts> {
                 fontFamily: 'Elmessiri',
                 color: Color.fromARGB(255, 20, 5, 87))),
       ),
-      content: Text("هل أنت متأكد من المعلومات المعطاة لإنشاء الحسابات؟",
-          style: TextStyle(fontFamily: 'Elmessiri')),
+      content: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("هل أنت متأكد من المعلومات المعطاة لإنشاء الحسابات؟",
+            style: TextStyle(fontFamily: 'Elmessiri')),
+      ),
       actions: [
         cancelButton,
         continueButton,
@@ -479,12 +616,89 @@ class _createAccountsState extends State<createAccounts> {
         [mphone]);
   }
 
+  showAlertDialog2() {
+    // set up the buttons
+
+    Widget continueButton = TextButton(
+      child: Text("حسنًا", style: TextStyle(fontFamily: 'Elmessiri')),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      title: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("إنشاء حساب",
+            style: TextStyle(
+                fontFamily: 'Elmessiri',
+                color: Color.fromARGB(255, 20, 5, 87))),
+      ),
+      content: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text("تم إنشاء كل من حساب الإمام والمؤذن بنجاح!",
+            style: TextStyle(fontFamily: 'Elmessiri')),
+      ),
+      actions: [
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void sending_SMS(String msg, List<String> list_receipents) async {
-    String send_result =
-        await sendSMS(message: msg, recipients: list_receipents)
-            .catchError((err) {
-      print(err);
+    if (await Permission.sms.request().isGranted) {
+      String send_result = await sendSMS(
+              message: msg, recipients: list_receipents, sendDirect: true)
+          .catchError((err) {
+        print(err);
+      });
+      print(send_result);
+    }
+  }
+
+  void _isDuplicate(String text) {
+    setState(() {
+      _mosquenum.text = text;
     });
-    print(send_result);
+
+    db
+        .collection("Mosque Manager")
+        .where('رقم المسجد', isEqualTo: _mosquenum.text)
+        .get()
+        .then((querySnapshot) async {
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          DuplicateNum = true;
+          DuplicateNumError =
+              'تم تعيين وانشاء حسابات الإمام والمؤذن لهذا المسجد';
+        });
+      } else {
+        setState(() {
+          DuplicateNum = false;
+        });
+        var docRef = db.collection("Mosque").doc(_mosquenum.text);
+        var docSnapshot = await docRef.get();
+
+        if (docSnapshot.exists && docSnapshot != null) {
+          //_InameController.text= db.collection("Mosque").doc(_mosquenum.text).get().data()['اسم الإمام'];
+//_MnameController.text= db.collection("Mosque").doc(_mosquenum.text).get().field()['اسم المؤذن'];
+
+          var data = docSnapshot.data();
+          _InameController.text = data!['Imam name'];
+          _MnameController.text = data['Muathen name'];
+        } else {
+          setState(() {
+            DuplicateNum = true;
+            DuplicateNumError = 'هذا المسجد ليس من ضمن المساجد المسموح بها';
+          });
+        }
+      }
+    });
   }
 }

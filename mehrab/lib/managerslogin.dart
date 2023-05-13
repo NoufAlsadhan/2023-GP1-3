@@ -1,9 +1,22 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mehrab/managersPage.dart';
+import 'package:mehrab/managerslogin.dart';
+import 'package:mehrab/newPassword.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 
 final TextEditingController _nationalId = TextEditingController();
 final TextEditingController _password = TextEditingController();
 bool _visible = false;
+bool _visible2 = false;
+var db = FirebaseFirestore.instance;
+var id;
+var _new;
 
 class ManagersLogin extends StatefulWidget {
   _managersLogin createState() => _managersLogin();
@@ -17,6 +30,7 @@ class _managersLogin extends State<ManagersLogin> {
     _nationalId.text = '';
     _password.text = '';
     _visible = false;
+    _visible2 = false;
   }
 
   @override
@@ -91,7 +105,8 @@ class _managersLogin extends State<ManagersLogin> {
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child: TextField(
+                        child: TextFormField(
+                          controller: _password,
                           obscureText: true,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
@@ -116,6 +131,10 @@ class _managersLogin extends State<ManagersLogin> {
                         visible: _visible,
                         child: Text(' جميع الحقول مطلوبة *',
                             style: TextStyle(color: Colors.red))),
+                    Visibility(
+                        visible: _visible2,
+                        child: Text(' رقم الهوية أو كلمة المرور غير صحيح*',
+                            style: TextStyle(color: Colors.red))),
                     Container(
                         height: 80,
                         padding: const EdgeInsets.all(20),
@@ -126,10 +145,43 @@ class _managersLogin extends State<ManagersLogin> {
                           ),
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_nationalId.text.isEmpty ||
                                 _password.text.isEmpty) {
+                              _visible2 = false;
                               _toggle();
+                            }
+
+                            if (_nationalId.text.isNotEmpty &&
+                                _password.text.isNotEmpty) {
+                              _toggle1();
+
+                              var val = await validateAuthentication();
+
+                              setState(() {
+                                _visible2 = val;
+                              });
+
+                              if (_visible2 == true) {
+                              } else {
+                                if (_new == "false") {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => managersPage(
+                                              id: id,
+                                            )),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => newPassword(
+                                                id: id,
+                                              )));
+                                }
+                              }
                             }
                           },
                         )),
@@ -151,5 +203,36 @@ class _managersLogin extends State<ManagersLogin> {
     setState(() {
       _visible = true;
     });
+  }
+
+  void _toggle1() {
+    setState(() {
+      _visible = false;
+    });
+  }
+
+  Future<bool> validateAuthentication() async {
+    bool found = true;
+    var hpassword = utf8.encode(_password.text);
+    var h = sha256.convert(hpassword).toString();
+
+    await db
+        .collection('Mosque Manager')
+        .where('رقم الهوية', isEqualTo: _nationalId.text)
+        .where('كلمة المرور', isEqualTo: h)
+        .get()
+        .then((querySnapshot) async {
+      if (querySnapshot.docs.isNotEmpty) {
+        final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+        found = false;
+        id = documentSnapshot.id;
+        await db.collection('Mosque Manager').doc(id).get().then((docSnapshot) {
+          if (docSnapshot.exists) {
+            _new = docSnapshot.data()!['جديد'];
+          }
+        });
+      }
+    });
+    return found;
   }
 }
