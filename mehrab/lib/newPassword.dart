@@ -28,6 +28,16 @@ class newPassword extends StatefulWidget {
 }
 
 class _newPassword extends State<newPassword> {
+  void initState() {
+    super.initState();
+    _password1.clear();
+    _password2.clear();
+    validChar = true;
+    charError = null;
+    bool equal = true;
+    equalError = null;
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -65,6 +75,11 @@ class _newPassword extends State<newPassword> {
                       ),
                     ),
                     Container(
+                        child: Text(
+                      'الرجاء تغيير كلمة المرور لاستخدام حسابك',
+                      style: TextStyle(fontFamily: 'Elmessiri'),
+                    )),
+                    Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
@@ -74,6 +89,7 @@ class _newPassword extends State<newPassword> {
                           onFieldSubmitted: _validate1,
                           decoration: InputDecoration(
                             errorText: validChar == false ? charError : null,
+                            errorMaxLines: 6,
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
                             prefixIcon: Icon(Icons.lock,
                                 color: Color.fromRGBO(212, 175, 55, 1)),
@@ -133,13 +149,10 @@ class _newPassword extends State<newPassword> {
                           onPressed: () {
                             if (_password1.text.isNotEmpty &&
                                 _password2.text.isNotEmpty &&
-                                _password1.text.length == 12 &&
+                                validChar == true &&
                                 _password1.text == _password2.text) {
                               var hpassword = utf8.encode(_password1.text);
-                              db
-                                  .collection("Mosque Manager")
-                                  .doc(widget.id)
-                                  .update({
+                              db.collection("Account").doc(widget.id).update({
                                 'جديد': 'false',
                                 'كلمة المرور':
                                     sha256.convert(hpassword).toString()
@@ -190,19 +203,38 @@ class _newPassword extends State<newPassword> {
   }
 
   void _validate1(String value) {
-    if (value.length != 12 && value.isNotEmpty) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-_!@#\$&*~]).{12,}$';
+    RegExp regExp = new RegExp(pattern);
+    bool valid = regExp.hasMatch(value);
+
+    if (valid == false) {
       setState(() {
         validChar = false;
-        charError = 'كلمة المرور يجب أن تكون 12 حرف';
+        charError =
+            'يجب أن تحتوي كلمة المرور على 12 حرفًا, حرف كبير واحد, حرف صغير واحد, رقم واحد وحرف خاص واحد على الأقل';
       });
-    }
-    if (value.length == 12 && value.isNotEmpty) {
+    } else {
       setState(() {
         validChar = true;
         charError = null;
       });
     }
   }
+
+  /*  if (value.length < 12 && value.isNotEmpty) {
+      setState(() {
+        validChar = false;
+        charError = 'كلمة المرور يجب أن تكون 12 حرف';
+      });
+    }
+    if (value.length >= 12 && value.isNotEmpty) {
+      setState(() {
+        validChar = true;
+        charError = null;
+      });
+    }
+  }*/
 
   _validate2(String value) {
     if (value != _password1.text &&

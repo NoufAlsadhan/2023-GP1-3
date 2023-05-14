@@ -143,7 +143,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            enabled: !DuplicateNum,
+                            enabled: false,
                             controller: _IidController,
                             onFieldSubmitted: validateidI,
                             keyboardType: TextInputType.number,
@@ -172,7 +172,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            enabled: !DuplicateNum,
+                            enabled: false,
                             controller: _IphoneController,
                             onFieldSubmitted: validatuenumI,
                             keyboardType: TextInputType.number,
@@ -227,7 +227,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            enabled: !DuplicateNum,
+                            enabled: false,
                             controller: _MidController,
                             onFieldSubmitted: validateidM,
                             keyboardType: TextInputType.number,
@@ -256,7 +256,7 @@ class _createAccountsState extends State<createAccounts> {
                         child: Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            enabled: !DuplicateNum,
+                            enabled: false,
                             controller: _MphoneController,
                             onFieldSubmitted: validatuenumM,
                             keyboardType: TextInputType.number,
@@ -470,7 +470,7 @@ class _createAccountsState extends State<createAccounts> {
     }
 
     db
-        .collection("Mosque Manager")
+        .collection("Account")
         .where('رقم الهوية', isEqualTo: text)
         .get()
         .then((querySnapshot) {
@@ -597,12 +597,12 @@ class _createAccountsState extends State<createAccounts> {
       String iphone,
       String mphone) {
     db
-        .collection('Mosque Manager')
+        .collection('Account')
         .doc()
         .set(imamData)
         .onError((e, _) => print("Error writing document: $e"));
     db
-        .collection('Mosque Manager')
+        .collection('Account')
         .doc()
         .set(muathenData)
         .onError((e, _) => print("Error writing document: $e"));
@@ -668,7 +668,7 @@ class _createAccountsState extends State<createAccounts> {
     });
 
     db
-        .collection("Mosque Manager")
+        .collection("Account")
         .where('رقم المسجد', isEqualTo: _mosquenum.text)
         .get()
         .then((querySnapshot) async {
@@ -676,7 +676,14 @@ class _createAccountsState extends State<createAccounts> {
         setState(() {
           DuplicateNum = true;
           DuplicateNumError =
-              'تم تعيين وانشاء حسابات الإمام والمؤذن لهذا المسجد';
+              'تم تعيين وانشاء حسابات الإمام والمؤذن لهذا المسجد مسبقًا';
+
+          _IidController.clear();
+          _IphoneController.clear();
+          _InameController.clear();
+          _MidController.clear();
+          _MphoneController.clear();
+          _MnameController.clear();
         });
       } else {
         setState(() {
@@ -686,16 +693,32 @@ class _createAccountsState extends State<createAccounts> {
         var docSnapshot = await docRef.get();
 
         if (docSnapshot.exists && docSnapshot != null) {
-          //_InameController.text= db.collection("Mosque").doc(_mosquenum.text).get().data()['اسم الإمام'];
-//_MnameController.text= db.collection("Mosque").doc(_mosquenum.text).get().field()['اسم المؤذن'];
-
           var data = docSnapshot.data();
-          _InameController.text = data!['Imam name'];
-          _MnameController.text = data['Muathen name'];
+          DocumentReference imamRef = data!["Imam"];
+          DocumentSnapshot imamDocSnapshot = await imamRef.get();
+          DocumentReference muathenRef = data["Muathen"];
+          DocumentSnapshot muathenDocSnapshot = await muathenRef.get();
+          if (imamDocSnapshot.exists &&
+              imamDocSnapshot != null &&
+              muathenDocSnapshot.exists &&
+              muathenDocSnapshot != null) {
+            _InameController.text = imamDocSnapshot.get('الاسم');
+            _MnameController.text = muathenDocSnapshot.get('الاسم');
+            _IphoneController.text = imamDocSnapshot.get('رقم الجوال');
+            _MphoneController.text = muathenDocSnapshot.get('رقم الجوال');
+            _IidController.text = imamDocSnapshot.id;
+            _MidController.text = muathenDocSnapshot.id;
+          }
         } else {
           setState(() {
             DuplicateNum = true;
             DuplicateNumError = 'هذا المسجد ليس من ضمن المساجد المسموح بها';
+            _IidController.clear();
+            _IphoneController.clear();
+            _InameController.clear();
+            _MidController.clear();
+            _MphoneController.clear();
+            _MnameController.clear();
           });
         }
       }

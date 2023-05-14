@@ -41,6 +41,21 @@ class _managersPage extends State<managersPage> {
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
             ),
+            leading: Container(
+              child: TextField(
+                decoration: InputDecoration(
+                  prefixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.key,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Perform the search here
+                    },
+                  ),
+                ),
+              ),
+            ),
             backgroundColor: Color.fromARGB(255, 20, 5, 87),
           ),
           bottomNavigationBar: BottomNavigationBar(

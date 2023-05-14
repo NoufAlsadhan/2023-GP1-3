@@ -14,6 +14,8 @@ final TextEditingController _nationalId = TextEditingController();
 final TextEditingController _password = TextEditingController();
 bool _visible = false;
 bool _visible2 = false;
+var idErrormag = '';
+bool idError = false;
 var db = FirebaseFirestore.instance;
 var id;
 var _new;
@@ -31,6 +33,8 @@ class _managersLogin extends State<ManagersLogin> {
     _password.text = '';
     _visible = false;
     _visible2 = false;
+    idErrormag = '';
+    idError = false;
   }
 
   @override
@@ -81,8 +85,10 @@ class _managersLogin extends State<ManagersLogin> {
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
                           keyboardType: TextInputType.number,
+                          onFieldSubmitted: validateId,
                           controller: _nationalId,
                           decoration: InputDecoration(
+                            errorText: idError == true ? idErrormag : null,
                             contentPadding: EdgeInsets.symmetric(vertical: 15),
                             prefixIcon: Icon(Icons.account_circle,
                                 color: Color.fromRGBO(212, 175, 55, 1)),
@@ -146,6 +152,9 @@ class _managersLogin extends State<ManagersLogin> {
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
                           onPressed: () async {
+                            if (_nationalId.text.length != 10) {
+                              return;
+                            }
                             if (_nationalId.text.isEmpty ||
                                 _password.text.isEmpty) {
                               _visible2 = false;
@@ -217,7 +226,7 @@ class _managersLogin extends State<ManagersLogin> {
     var h = sha256.convert(hpassword).toString();
 
     await db
-        .collection('Mosque Manager')
+        .collection('Account')
         .where('رقم الهوية', isEqualTo: _nationalId.text)
         .where('كلمة المرور', isEqualTo: h)
         .get()
@@ -226,7 +235,7 @@ class _managersLogin extends State<ManagersLogin> {
         final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         found = false;
         id = documentSnapshot.id;
-        await db.collection('Mosque Manager').doc(id).get().then((docSnapshot) {
+        await db.collection('Account').doc(id).get().then((docSnapshot) {
           if (docSnapshot.exists) {
             _new = docSnapshot.data()!['جديد'];
           }
@@ -234,5 +243,19 @@ class _managersLogin extends State<ManagersLogin> {
       }
     });
     return found;
+  }
+
+  validateId(text) {
+    if (text.length != 10 && text.isNotEmpty) {
+      setState(() {
+        idError = true;
+        idErrormag = 'رقم الهوية يجب أن يكون 10 ارقام';
+      });
+    } else {
+      setState(() {
+        idError = false;
+        idErrormag = '';
+      });
+    }
   }
 }
