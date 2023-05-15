@@ -87,112 +87,171 @@ class ItemDetailsScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            // Column(
-
-                            Text('الحي: ${post['District']}',
-                                style: new TextStyle(
+Column(crossAxisAlignment: CrossAxisAlignment.center ,
+  children: [
+  
+   //Align(
+   //alignment:Alignment.centerRight,
+   /* child:*/Text('التفاصيل ', style: new TextStyle(
                                     fontFamily: 'Elmessiri',
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 21,
+                                    color: Color.fromARGB(255, 20, 5, 87),
+                                     ),),
+
+   //),
+
+
+
+ 
+  Row(
+     // crossAxisAlignment: CrossAxisAlignment.end ,
+      children: [
+  
+          Expanded(
+            child: Text('الحي: ${post['District']}',textAlign: TextAlign.right,
+                                    style: new TextStyle(
+                                        fontFamily: 'Elmessiri',
+                                       // fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 20, 5, 87),
+                                        
+                                         )),
+          ),
+                                          Icon(
+                                Icons.location_city_rounded ,
+                                color: Color.fromRGBO(212, 175, 55, 1),
+                                size: 40 ,
+                              ),
+  
+      ],),
+ 
+   
+   
+    Row(
+      children: [
+
+          Expanded(
+            child: InkWell(
+                                onTap: _launchURL,
+                                child: const Text(
+                                  'افتح مع خارطة جوجل',textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    fontFamily: 'Elmessiri',
+                                    //fontWeight: FontWeight.bold,
                                     fontSize: 18,
-                                    color: Color.fromARGB(255, 20, 5, 87))),
-                            Icon(
-                              Icons.mosque_outlined,
-                              color: Color.fromARGB(255, 20, 5, 87),
-                              size: 45.0,
-                            ),
-
-                            /*Text("الموقع :اضغط هنا${post['name']}",style: new TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-          color: Color.fromARGB(255, 20, 5, 87))),
-           Icon(Icons.pin_drop_outlined,
-         color: Color.fromARGB(255, 20, 5, 87),
-          size: 45.0,
-          
-         ),*/
-
-                            InkWell(
-                              onTap: _launchURL,
-                              child: const Text(
-                                'الموقع: اضغط هنا',
-                                style: TextStyle(
-                                  fontFamily: 'Elmessiri',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 20, 5, 87),
-                                  decoration: TextDecoration.underline,
+                                    color: Color.fromARGB(255, 37, 171, 238),
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ),
-                            ),
+          ),
                             Icon(
-                              Icons.pin_drop_outlined,
-                              color: Color.fromARGB(255, 20, 5, 87),
-                              size: 45.0,
+                              Icons.pin_drop_outlined ,
+                              color: Color.fromRGBO(212, 175, 55, 1),
+                              size:40,
                             )
-                          ],
-                        ),
-                        SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            // Column(
+      ],
+    ),
+
+
+
+
+    Row(children: [
 
                             Expanded(
-                              child: Text('الإمام: ${post['Imam name']}',
-                                  style: new TextStyle(
-                                      fontFamily: 'Elmessiri',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: Color.fromARGB(255, 20, 5, 87))),
+                              child: Text('الإمام: ${post['Imam name']}',textAlign: TextAlign.right,
+                                    style: new TextStyle(
+                                        fontFamily: 'Elmessiri',
+                                       // fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 20, 5, 87)
+                                        )
+                                        ),
                             ),
+                            
                             // tooltip: 'Increase volume by 10',
                             //),
                             Icon(
                               Icons.person_2_outlined,
-                              color: Color.fromARGB(255, 20, 5, 87),
-                              size: 45.0,
+                              color:  Color.fromRGBO(212, 175, 55, 1),
+                              size: 40 ,
 
-                              //semanticLabel: 'Jumanah',
+                             
                             ),
+      
+    ],),
+                        
 
-                            Expanded(
-                              child: Text('المؤذن: ${post['Muathen name']}',
-                                  style: new TextStyle(
-                                      fontFamily: 'Elmessiri',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: Color.fromARGB(255, 20, 5, 87))),
-                            ),
+
+Row(children: [ 
+Expanded(
+  child:   Text('المؤذن: ${post['Muathen name']}',textAlign: TextAlign.right,
+  
+                                    style: new TextStyle(
+  
+                                        fontFamily: 'Elmessiri',
+  
+                                 //     fontWeight: FontWeight.bold,
+  
+                                        fontSize: 18,
+  
+                                        color: Color.fromARGB(255, 20, 5, 87))),
+),
+                            
                             Icon(
                               Icons.person_2_outlined,
-                              color: Color.fromARGB(255, 20, 5, 87),
-                              size: 45.0,
+                              color: Color.fromRGBO(212, 175, 55, 1),
+                              size: 40 ,
                             ),
-                          ],
-                        )
-                      ],
+
+],
+
+  
+),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                       
+],),
+
+Column(
+  
+                children: const [
+                    Divider(
+                    color:  Color.fromARGB(255, 166, 165, 167),
+                    ),
+                   Text(
+                    'المستجدات',
+                    style: TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 20, 5, 87),
+                      fontFamily: 'Elmessiri',
                     ),
                   ),
-                ],
-              ),
-              Column(
-                children: const [
+
+
                   SizedBox(
-                    height: 105,
+                    height: 60,
                   ),
                   Text(
                     'لا يوجد مستجدات حالية',
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      //fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 166, 165, 167),
                       fontFamily: 'Elmessiri',
                     ),
@@ -203,8 +262,13 @@ class ItemDetailsScreen extends StatelessWidget {
                   )
                 ],
               ),
-            ],
-          ),
-        ));
+
+
+
+                        
+                      ],),),],),],),),
+                    
+                    );
+        
   }
 }
