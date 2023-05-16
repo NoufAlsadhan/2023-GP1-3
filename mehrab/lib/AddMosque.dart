@@ -7,8 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:mehrab/AddMosque.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'dart:math';
+import 'dart:math' as math;
 
 
 
@@ -23,8 +25,8 @@ final TextEditingController _MuathenName = TextEditingController();
 final TextEditingController _MosqueImage = TextEditingController();
 var db = FirebaseFirestore.instance;
 String imageUrl='';
-GoogleMapController? _Loccontroller;
-  Set<Marker> _markers = Set<Marker>();
+//GoogleMapController? _Loccontroller;
+  //Set<Marker> _markers = Set<Marker>();
   
 
 
@@ -77,26 +79,41 @@ void initState() {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              leading:  BackButton(
-                color: Colors.white,
-                onPressed: () {
-                    Navigator.pop(context);
-                  } // <-- SEE HERE
-              ),
-              title: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  ' إضافة مسجد جديد',
-                  style: TextStyle(fontFamily: 'Elmessiri'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
                 ),
               ),
+              title: Text(
+                'إضافة مسجد جديد',
+                style: TextStyle(fontFamily: 'Elmessiri'),
+              ),
+              centerTitle: true,
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              leading: Container(), // Remove the leading back button
+              actions: [
+                IconButton(
+                  icon: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(math.pi),
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
             
             
 //padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                body: Container(
-                //height: 500,
+                decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/background2.jpg"),
+                  fit: BoxFit.cover,
+                ),
+              ),
                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: SingleChildScrollView(
               child: Form (
@@ -124,6 +141,8 @@ void initState() {
                             errorText: validNum == false
                                   ? numberErrorMessageI
                                   : null,
+                                  contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
@@ -133,6 +152,8 @@ void initState() {
                             labelText: ' *رقم المسجد',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
@@ -149,6 +170,8 @@ void initState() {
                           onFieldSubmitted: validateMosqueName,
                           decoration: InputDecoration(
                             errorText: validMname == false ? MosqueNameErrorMessage : null,
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 15),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
@@ -158,6 +181,8 @@ void initState() {
                             labelText: ' *اسم المسجد',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
@@ -174,6 +199,8 @@ void initState() {
                         child: TextFormField(
                           controller: _District,
                           decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 15),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
@@ -183,6 +210,8 @@ void initState() {
                             labelText: '  *الحي',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
@@ -199,6 +228,8 @@ void initState() {
                         child: TextFormField(
                           controller: _ImamName,
                           decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 15),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
@@ -208,6 +239,8 @@ void initState() {
                             labelText: '  *اسم الإمام',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
@@ -222,6 +255,8 @@ void initState() {
                         child: TextFormField(
                           controller: _MuathenName,
                           decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 15),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
@@ -231,6 +266,8 @@ void initState() {
                             labelText: '  *اسم المؤذن',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
@@ -238,15 +275,16 @@ void initState() {
                     ),
 
 
+
                      const SizedBox(height: 20,),
                       
-
+                     
                      
                      Container(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child : Text(' أضف صورة المسجد :'  ,style: TextStyle(fontFamily: 'Elmessiri'),
+                        child : Text(' *أضف صورة المسجد :'  ,style: TextStyle(fontFamily: 'Elmessiri', fontSize: 12),
 
                         ),),
                      ),
@@ -291,13 +329,13 @@ void initState() {
 
                             
                           },
-                           icon: Icon(Icons.camera_alt)),
+                           icon: Icon(Icons.camera_alt , color: Color.fromARGB(255, 20, 5, 87),)),
                       ),
                     ),
 
                     Visibility(
                           visible: _visible2,
-                          child: Text('تم إدراج الصورة بنجاح' ,
+                          child: Text('تم إدراج صورة المسجد بنجاح' ,
                               style: TextStyle(color: Colors.green))), 
 
                      
@@ -311,6 +349,8 @@ void initState() {
                           controller: _LocLink,
                           onFieldSubmitted: validateUrl,
                           decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 15),
                             errorText: validUrl == false
                                   ? UrlErrorMessage : null,
                             enabledBorder: OutlineInputBorder(
@@ -322,11 +362,15 @@ void initState() {
                             labelText: '  *رابط الموقع',
                             labelStyle: TextStyle(
                               color: Colors.grey[600],
+                              fontFamily: "Elmessiri",
+                                    fontSize: 12
                             ),
                           ),
                         ),
                       ),
                     ), 
+
+const SizedBox(height: 20,),
 
                        Visibility(
                           visible: _visible,
@@ -335,6 +379,7 @@ void initState() {
                    
                      
                     
+
       
 
                     Container(
@@ -399,12 +444,12 @@ void initState() {
                                   
                                   final MosqueData = {
                                     
-                                    "ID": _Mosquenum.text,  
+                                    //"ID": _Mosquenum.text,  
                                     "Name": _MosqueNameController.text,
                                     "District": _District.text,
                                     "Location": _LocLink.text,
-                                    "Imam_name": _ImamName.text,
-                                    "Muathen_name": _MuathenName.text,
+                                    "Imam name": _ImamName.text,
+                                    "Muathen name": _MuathenName.text,
                                     "Image": imageUrl,
 
                                   };
@@ -544,7 +589,7 @@ print('Document does not exist');
       ) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("إلغاء", style: TextStyle(fontFamily: 'Elmessiri')),
+      child: Text("إلغاء", style: TextStyle(fontFamily: 'Elmessiri', color: Colors.red)),
       onPressed: () {
         Navigator.of(context).pop();
       },
