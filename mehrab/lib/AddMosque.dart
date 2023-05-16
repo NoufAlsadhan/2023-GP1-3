@@ -34,7 +34,6 @@ class AddMosque extends StatefulWidget {
 
 
 class _AddMosqueState extends State<AddMosque> {
-//Sending sms with creditials
   final _controller = TextEditingController();
 
   
@@ -42,6 +41,8 @@ class _AddMosqueState extends State<AddMosque> {
 void initState() {
     super.initState();
     CollectionReference collectionRef = FirebaseFirestore.instance.collection('Mosque');
+    late Stream<QuerySnapshot> _stream;
+    _stream = collectionRef.snapshots();
     _Mosquenum.text = ''; //1
     _MosqueNameController.text = ''; //2
     _District.text = ''; //3
@@ -51,12 +52,17 @@ void initState() {
   _MosqueImage.text = ''; //7
   }
 
-//collectionRef.add(dataToSave);
+
   bool _visible = false;
+  bool _visible2 = false;
   var numberErrorMessageI = '';
   var ImageErrorMessage='';
+    var UrlErrorMessage='';
+    var MosqueNameErrorMessage='';
   //var validNumErrorMessage ='';
     var validNum = true;
+    var validUrl = true;
+    var validMname = true;
   
   
 
@@ -87,13 +93,7 @@ void initState() {
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
             ),
             
-            /*body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/background2.jpg"),
-                  fit: BoxFit.cover,
-                ),
-              ), */
+            
 //padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                body: Container(
                 //height: 500,
@@ -130,9 +130,9 @@ void initState() {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: ' رقم المسجد',
+                            labelText: ' *رقم المسجد',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -146,16 +146,18 @@ void initState() {
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
                           controller: _MosqueNameController,
+                          onFieldSubmitted: validateMosqueName,
                           decoration: InputDecoration(
+                            errorText: validMname == false ? MosqueNameErrorMessage : null,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: ' اسم المسجد',
+                            labelText: ' *اسم المسجد',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -178,16 +180,16 @@ void initState() {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: '  الحي',
+                            labelText: '  *الحي',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
                       ),
                     ),
 
-                    //const SizedBox(height: 20,),
+                    
 
                     Container(
                       //height: 100,
@@ -203,9 +205,9 @@ void initState() {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: '  اسم الإمام',
+                            labelText: '  *اسم الإمام',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -226,9 +228,9 @@ void initState() {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: '  اسم المؤذن',
+                            labelText: '  *اسم المؤذن',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -237,20 +239,21 @@ void initState() {
 
 
                      const SizedBox(height: 20,),
+                      
 
+                     
                      Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child : Text(' : أضف صورة المسجد '  ,style: TextStyle(fontFamily: 'Elmessiri'),
+                        child : Text(' أضف صورة المسجد :'  ,style: TextStyle(fontFamily: 'Elmessiri'),
 
                         ),),
                      ),
 
-                     //const SizedBox(height: 20,),
-                     //const SizedBox(height: 20,),
+                   
                         
-
+                     
                        Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Directionality(
@@ -273,49 +276,32 @@ void initState() {
                                 await referenceImageToUpload.putFile(File(file!.path));
                                 setState(() async {
                                   imageUrl=await referenceImageToUpload.getDownloadURL();
+                                  print(imageUrl);
+
+                                  if(imageUrl.isNotEmpty==true){
+                      _toggle2();
+                     }
 
                                 }); 
 
                              }catch(error){
-                               //some error occured 
+                               //some error 
+                               
                              }
 
                             
-                            //print ('$imageUrl lama');
                           },
                            icon: Icon(Icons.camera_alt)),
                       ),
                     ),
 
+                    Visibility(
+                          visible: _visible2,
+                          child: Text('تم إدراج الصورة بنجاح' ,
+                              style: TextStyle(color: Colors.green))), 
 
+                     
                       
-
-                      
-                      /* Container (
-                        height:300,
-                         //padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      child: GoogleMap( initialCameraPosition: CameraPosition(
-          target: LatLng(37.42796133580664, -122.085749655962),
-          zoom: 14,
-        ),
-        markers: _markers,
-        onMapCreated: (GoogleMapController controller) {
-          _Loccontroller = controller;
-
-          // Add marker to the map
-          setState(() {
-            _markers.add(
-              Marker(
-                markerId: MarkerId('marker_1'),
-                position: LatLng(37.42796133580664, -122.085749655962),
-                infoWindow: InfoWindow(title: 'Googleplex'),
-              ),
-            );
-          });
-        },
-      ),), */
-                       
-
 
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -323,29 +309,33 @@ void initState() {
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
                           controller: _LocLink,
+                          onFieldSubmitted: validateUrl,
                           decoration: InputDecoration(
+                            errorText: validUrl == false
+                                  ? UrlErrorMessage : null,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(90.0),
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: '  رابط الموقع',
+                            labelText: '  *رابط الموقع',
                             labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 20, 5, 87),
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
                       ),
                     ), 
 
-                    
-                    Visibility(
+                       Visibility(
                           visible: _visible,
                           child: Text(' جميع الحقول مطلوبة *',
-                              style: TextStyle(color: Colors.red))),   
+                              style: TextStyle(color: Colors.red))),
+                   
+                     
                     
-                     // const SizedBox(height: 20,),
+      
 
                     Container(
                           height: 80,
@@ -359,9 +349,11 @@ void initState() {
                                   style: TextStyle(fontFamily: 'Elmessiri')),
                               onPressed: () async {
 
+                              
+
                                 bool empt = false;
                                 bool falselength = false;
-                                 if (//_Mosquenum.text.isEmpty ||
+                                 if (_Mosquenum.text.isEmpty ||
                                     _MosqueNameController.text.isEmpty ||
                                     _District.text.isEmpty ||
                                     _LocLink.text.isEmpty ||
@@ -379,7 +371,7 @@ void initState() {
                                   _toggle();
                                 }
 
-                                if (//_Mosquenum.text.isNotEmpty &&
+                                if (_Mosquenum.text.isNotEmpty &&
                                     _MosqueNameController.text.isNotEmpty &&
                                     _District.text.isNotEmpty &&
                                     _LocLink.text.isNotEmpty &&
@@ -416,6 +408,10 @@ void initState() {
                                     "Image": imageUrl,
 
                                   };
+
+                                 var uri= Uri.parse(_LocLink.text);
+                                 print(uri);
+
                                    
 
                                   showAlertDialog(
@@ -448,19 +444,54 @@ void _toggle() {
     });
   }
 
-/*validateImage(String text) async {
+  void _toggle2() {
+    setState(() {
+      _visible2 = true;
+    });
+  }
+
+
+
+validateUrl(String text) async {
     var v = true;
-    if (text.isNotEmpty) {
+    
+      if(!text.startsWith('https://goo.gl/maps')){
       setState(() {
-        validNum = false;
-        ImageErrorMessage = 'تمت إضافة الصورة بنجاح';
+        validUrl = false;
+        UrlErrorMessage = 'الرابط المرفق يجب أن يكون صحيح';
         v = false;
       });
-    } 
-    else{ 
-      ImageErrorMessage ='قم بإضافة صورة للمسجد';
+    } else if (text.startsWith('https://goo.gl/maps')){
+      setState(() {
+      validUrl=true;
+       
+    });
     }
-} */
+
+}//End validate URL
+
+validateMosqueName(String text) async {
+  
+    var v = true;
+    
+      if(!(text.startsWith('مسجد')) || (!text.startsWith('جامع'))){
+      setState(() {
+        validMname = false;
+        MosqueNameErrorMessage = 'يجب أن يبدأ الاسم بـ : جامع أو مسجد';
+        v = false;
+      });
+    }  if ((text.startsWith('مسجد')) || text.startsWith('جامع')){
+      setState(() {
+        print('hello');
+        validMname=true;
+      
+       
+    });
+    }
+
+}//End validate Mosque Name   
+
+
   
    validateNum(String text) async {
     var v = true;
@@ -490,17 +521,9 @@ print('Document does not exist');
 
     db
         .collection("Mosque").doc(text)
-        //.where(firebase.firestore.FieldPath.documentId(), '==', 'fK3ddutEpD2qQqRMXNW5')
-        //.where( , isEqualTo: text)
         .get()
         .then((querySnapshot) {
-      /* if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          validNum = false;
-          numberErrorMessageI = "رقم المسجد مسجَّل مسبقًا";
-          v = false;
-        });
-      } */
+
     });
 
 
@@ -585,21 +608,8 @@ print('Document does not exist');
         //.doc()
         .set(MosqueData)
         .onError((e, _) => print("Error writing document: $e"));
-        
 
-        db
-        .collection('Mosque')
-        //.doc(_Mosquenum)
-        .doc()
-        .set(MosqueData)
-        .onError((e, _) => print("Error writing document: $e"));
-
-    
-
-   
       }
-
- // setState(String? Function() param0) {}
 
 }
 
