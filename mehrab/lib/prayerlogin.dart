@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mehrab/prayersignup.dart';
-
+import 'package:mehrab/Readlistview.dart';
 
 class prayerlogin extends StatelessWidget {
   const prayerlogin({super.key});
@@ -106,7 +106,13 @@ class prayerlogin extends StatelessWidget {
                           ),
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Readlistview()),
+                            );
+                          },
                         )),
                     TextButton(
                       onPressed: () {},
@@ -118,12 +124,12 @@ class prayerlogin extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const prayersignup()),
-                    );
-                  },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const prayersignup()),
+                        );
+                      },
                       child: Text(
                         'ليس لدي حساب',
                         style: TextStyle(
@@ -136,5 +142,3 @@ class prayerlogin extends StatelessWidget {
             )));
   }
 }
-
-

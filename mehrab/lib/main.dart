@@ -5,7 +5,6 @@ import 'package:mehrab/prayerlogin.dart';
 //import 'package:mehrab/Mosquelist.dart';
 import 'package:mehrab/Readlistview.dart';
 
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,8 +13,7 @@ import 'package:flutter_sms/flutter_sms.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()
-  ));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()));
 }
 
 class HomePage extends StatelessWidget {
@@ -93,7 +91,7 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AdminLogin()),
+                    MaterialPageRoute(builder: (context) => AdminLogin()),
                   );
                 },
                 child: Ink.image(
