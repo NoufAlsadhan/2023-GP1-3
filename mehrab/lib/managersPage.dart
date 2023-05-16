@@ -35,28 +35,21 @@ class _managersPage extends State<managersPage> {
               ),
             ),
             title: Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.center,
               child: Text(
                 'الرئيسية ',
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
             ),
-            leading: Container(
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.key,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      // Perform the search here
-                    },
-                  ),
-                ),
+            backgroundColor: Color.fromARGB(255, 20, 5, 87),
+          ),
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/background2.jpg"),
+                fit: BoxFit.cover,
               ),
             ),
-            backgroundColor: Color.fromARGB(255, 20, 5, 87),
           ),
           bottomNavigationBar: BottomNavigationBar(
             //backgroundColor: Colors.black, // <-- This works for fixed

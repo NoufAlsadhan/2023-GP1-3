@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mehrab/AdminPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mehrab/AdminPage.dart';
@@ -12,7 +13,6 @@ import 'package:mehrab/AdminLogin.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-
 
 final TextEditingController _Username = TextEditingController();
 final TextEditingController _password = TextEditingController();
@@ -24,15 +24,14 @@ var db = FirebaseFirestore.instance;
 var id;
 var _new;
 
-
 class AdminLogin extends StatefulWidget {
   _AdminLogin createState() => _AdminLogin();
 }
 
 /*class _AdminLogin extends StatelessWidget {
   const AdminLogin({super.key}); */
-  
-  class _AdminLogin extends State<AdminLogin> {
+
+class _AdminLogin extends State<AdminLogin> {
   @override
   void initState() {
     super.initState();
@@ -44,8 +43,7 @@ class AdminLogin extends StatefulWidget {
     idError = false;
   }
 
-
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   // This widget is the root of your application.
   @override
@@ -56,19 +54,30 @@ class AdminLogin extends StatefulWidget {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-               leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              title: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  ' تسجيل الدخول للمشرف',
-                  style: TextStyle(fontFamily: 'Elmessiri'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
                 ),
               ),
+              title: Text(
+                ' تسجيل الدخول للمشرف',
+                style: TextStyle(fontFamily: 'Elmessiri'),
+              ),
+              centerTitle: true,
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              leading: Container(), // Remove the leading back button
+              actions: [
+                IconButton(
+                  icon: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(math.pi),
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
             body: Container(
               decoration: BoxDecoration(
@@ -90,8 +99,6 @@ class AdminLogin extends StatefulWidget {
                         width: 150,
                       ),
                     ),
-
-                    
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Directionality(
@@ -111,7 +118,7 @@ class AdminLogin extends StatefulWidget {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: ' اسم المستخدم',
+                            labelText: '* اسم المستخدم',
                             labelStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontFamily: "Elmessiri",
@@ -137,7 +144,7 @@ class AdminLogin extends StatefulWidget {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: 'كلمة المرور',
+                            labelText: '* كلمة المرور',
                             labelStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontFamily: "Elmessiri",
@@ -146,18 +153,14 @@ class AdminLogin extends StatefulWidget {
                         ),
                       ),
                     ),
-                  
-                      Visibility(
+                    Visibility(
                         visible: _visible,
                         child: Text(' جميع الحقول مطلوبة *',
                             style: TextStyle(color: Colors.red))),
-
-                      Visibility(
+                    Visibility(
                         visible: _visible2,
                         child: Text(' إسم المستخدم  أو كلمة المرور غير صحيحة',
                             style: TextStyle(color: Colors.red))),
-                
-                    
                     Container(
                         height: 80,
                         padding: const EdgeInsets.all(20),
@@ -169,13 +172,12 @@ class AdminLogin extends StatefulWidget {
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
                           onPressed: () async {
-
-                           /* Navigator.push(
+                            /* Navigator.push(
                       context, MaterialPageRoute(
                           builder: (context) => const AdminPage()),
                     ); */
 
-                             /*var  hpassword;
+                            /*var  hpassword;
                              hpassword = utf8.encode('admin111');
                             var h = sha256.convert(hpassword).toString();
                             print('hello');
@@ -195,7 +197,6 @@ class AdminLogin extends StatefulWidget {
                               print(val);
 
                               setState(() {
-                                
                                 _visible2 = val;
                               });
 
@@ -210,7 +211,7 @@ class AdminLogin extends StatefulWidget {
                                             )),
                                     (Route<dynamic> route) => false,
                                   );
-                                }else {
+                                } else {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -219,26 +220,16 @@ class AdminLogin extends StatefulWidget {
                                               )));
                                 }
                               }
-                            } 
-                     },
+                            }
+                          },
                         )),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'هل نسيت كلمة المرور؟',
-                        style: TextStyle(
-                            color: Colors.grey[600], fontFamily: 'Elmessiri'),
-                      ),
-                    ),
                   ],
                 ),
               ),
             )));
-
-
   }
 
-   void _toggle() {
+  void _toggle() {
     setState(() {
       _visible = true;
     });
@@ -276,23 +267,13 @@ class AdminLogin extends StatefulWidget {
     return found;
   }
 
-
-validateId(text) {
-      
-      setState(() {
-        idError = false;
-        idErrormag = '';
-      });
-    } 
-
-
-
-
-
-
-
-    
-  }//end of file 
+  validateId(text) {
+    setState(() {
+      idError = false;
+      idErrormag = '';
+    });
+  }
+}//end of file 
 
 
 

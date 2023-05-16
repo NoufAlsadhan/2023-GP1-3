@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:mehrab/prayerlogin.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -62,331 +62,351 @@ class _createAccountsState extends State<createAccounts> {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              title: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'إنشاء حساب',
-                  style: TextStyle(fontFamily: 'Elmessiri'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
                 ),
               ),
+              title: Text(
+                'إنشاء حساب',
+                style: TextStyle(fontFamily: 'Elmessiri'),
+              ),
+              centerTitle: true,
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              leading: Container(), // Remove the leading back button
+              actions: [
+                IconButton(
+                  icon: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(math.pi),
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-              child: Form(
-                key: _formKey,
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            controller: _mosquenum,
-                            onFieldSubmitted: _isDuplicate,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              errorText:
-                                  DuplicateNum ? DuplicateNumError : null,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+            body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/background2.jpg"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                child: Form(
+                  key: _formKey,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              controller: _mosquenum,
+                              onFieldSubmitted: _isDuplicate,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                errorText:
+                                    DuplicateNum ? DuplicateNumError : null,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: " * رقم المسجد",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: "   رقم المسجد",
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _InameController,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _InameController,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   اسم الإمام',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   اسم الإمام',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _IidController,
-                            onFieldSubmitted: validateidI,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              errorText:
-                                  validIdI == false ? idErrorMessageI : null,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _IidController,
+                              onFieldSubmitted: validateidI,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                errorText:
+                                    validIdI == false ? idErrorMessageI : null,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   رقم هوية الإمام',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   رقم هوية الإمام',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _IphoneController,
-                            onFieldSubmitted: validatuenumI,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              errorText: validPhoneI == false
-                                  ? numberErrorMessageI
-                                  : null,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _IphoneController,
+                              onFieldSubmitted: validatuenumI,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                errorText: validPhoneI == false
+                                    ? numberErrorMessageI
+                                    : null,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   رقم جوال الإمام',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   رقم جوال الإمام',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _MnameController,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _MnameController,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   اسم المؤذن',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   اسم المؤذن',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _MidController,
-                            onFieldSubmitted: validateidM,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              errorText:
-                                  validIdM == false ? idErrorMessageM : null,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _MidController,
+                              onFieldSubmitted: validateidM,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                errorText:
+                                    validIdM == false ? idErrorMessageM : null,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   رقم هوية المؤذن',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   رقم هوية المؤذن',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextFormField(
-                            enabled: false,
-                            controller: _MphoneController,
-                            onFieldSubmitted: validatuenumM,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              errorText: validPhoneM == false
-                                  ? numberErrorMessageM
-                                  : null,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                                borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 20, 5, 87),
-                                    width: 1),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _MphoneController,
+                              onFieldSubmitted: validatuenumM,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                errorText: validPhoneM == false
+                                    ? numberErrorMessageM
+                                    : null,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   رقم جوال المؤذن',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
                               ),
-                              labelText: '   رقم جوال المؤذن',
-                              labelStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: "Elmessiri",
-                                  fontSize: 12),
                             ),
                           ),
                         ),
-                      ),
-                      Visibility(
-                          visible: _visible,
-                          child: Text(' جميع الحقول مطلوبة *',
-                              style: TextStyle(color: Colors.red))),
-                      Container(
-                          height: 80,
-                          padding: const EdgeInsets.all(20),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(50),
-                                primary: Color.fromARGB(255, 20, 5, 87),
-                              ),
-                              child: const Text('إنشاء',
-                                  style: TextStyle(fontFamily: 'Elmessiri')),
-                              onPressed: () {
-                                bool empt = false;
-                                bool falselength = false;
-                                if (_IidController.text.isEmpty ||
-                                    _IidController.text.isEmpty ||
-                                    _IphoneController.text.isEmpty ||
-                                    _MphoneController.text.isEmpty ||
-                                    _mosquenum.text.isEmpty ||
-                                    _InameController.text.isEmpty ||
-                                    _MnameController.text.isEmpty ||
-                                    _IidController.text == '' ||
-                                    _IidController.text == '' ||
-                                    _IphoneController.text == '' ||
-                                    _MphoneController.text == '' ||
-                                    _mosquenum.text == '' ||
-                                    _InameController.text == '' ||
-                                    _MnameController.text == '') {
-                                  empt = true;
-                                  _toggle();
-                                }
-                                if (_IidController.text.isNotEmpty &&
-                                    _IidController.text.isNotEmpty &&
-                                    _IphoneController.text.isNotEmpty &&
-                                    _MphoneController.text.isNotEmpty &&
-                                    _mosquenum.text.isNotEmpty &&
-                                    _InameController.text.isNotEmpty &&
-                                    _MnameController.text.isNotEmpty &&
-                                    _IidController.text != '' &&
-                                    _IidController.text != '' &&
-                                    _IphoneController.text != '' &&
-                                    _MphoneController.text != '' &&
-                                    _mosquenum.text != '' &&
-                                    _InameController.text != '' &&
-                                    _MnameController.text != '') {
-                                  empt = false;
-                                  _toggle1();
-                                }
-                                if (_IidController.text.length != 10 ||
-                                    _MidController.text.length != 10 ||
-                                    _IphoneController.text.length != 10 ||
-                                    _MphoneController.text.length != 10) {
-                                  falselength = true;
-                                }
-                                if (empt == false &&
-                                    falselength == false &&
-                                    DuplicateNum == false &&
-                                    validIdI == true &&
-                                    validIdM == true &&
-                                    validPhoneI == true &&
-                                    validPhoneM == true) {
-                                  var muathenPassword =
-                                      generateRandomPassword();
-                                  var hmuathenpassword =
-                                      utf8.encode(muathenPassword);
-                                  var imamPassword = generateRandomPassword();
-                                  var himampassword = utf8.encode(imamPassword);
-                                  bool newP = true;
+                        Visibility(
+                            visible: _visible,
+                            child: Text(' جميع الحقول مطلوبة *',
+                                style: TextStyle(color: Colors.red))),
+                        Container(
+                            height: 80,
+                            padding: const EdgeInsets.all(20),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(50),
+                                  primary: Color.fromARGB(255, 20, 5, 87),
+                                ),
+                                child: const Text('إنشاء',
+                                    style: TextStyle(fontFamily: 'Elmessiri')),
+                                onPressed: () {
+                                  bool empt = false;
+                                  bool falselength = false;
+                                  if (_IidController.text.isEmpty ||
+                                      _IidController.text.isEmpty ||
+                                      _IphoneController.text.isEmpty ||
+                                      _MphoneController.text.isEmpty ||
+                                      _mosquenum.text.isEmpty ||
+                                      _InameController.text.isEmpty ||
+                                      _MnameController.text.isEmpty ||
+                                      _IidController.text == '' ||
+                                      _IidController.text == '' ||
+                                      _IphoneController.text == '' ||
+                                      _MphoneController.text == '' ||
+                                      _mosquenum.text == '' ||
+                                      _InameController.text == '' ||
+                                      _MnameController.text == '') {
+                                    empt = true;
+                                    _toggle();
+                                  }
+                                  if (_IidController.text.isNotEmpty &&
+                                      _IidController.text.isNotEmpty &&
+                                      _IphoneController.text.isNotEmpty &&
+                                      _MphoneController.text.isNotEmpty &&
+                                      _mosquenum.text.isNotEmpty &&
+                                      _InameController.text.isNotEmpty &&
+                                      _MnameController.text.isNotEmpty &&
+                                      _IidController.text != '' &&
+                                      _IidController.text != '' &&
+                                      _IphoneController.text != '' &&
+                                      _MphoneController.text != '' &&
+                                      _mosquenum.text != '' &&
+                                      _InameController.text != '' &&
+                                      _MnameController.text != '') {
+                                    empt = false;
+                                    _toggle1();
+                                  }
+                                  if (_IidController.text.length != 10 ||
+                                      _MidController.text.length != 10 ||
+                                      _IphoneController.text.length != 10 ||
+                                      _MphoneController.text.length != 10) {
+                                    falselength = true;
+                                  }
+                                  if (empt == false &&
+                                      falselength == false &&
+                                      DuplicateNum == false &&
+                                      validIdI == true &&
+                                      validIdM == true &&
+                                      validPhoneI == true &&
+                                      validPhoneM == true) {
+                                    var muathenPassword =
+                                        generateRandomPassword();
+                                    var hmuathenpassword =
+                                        utf8.encode(muathenPassword);
+                                    var imamPassword = generateRandomPassword();
+                                    var himampassword =
+                                        utf8.encode(imamPassword);
+                                    bool newP = true;
 
-                                  final ImamData = {
-                                    "رقم الهوية": _IidController.text,
-                                    "الإسم": _InameController.text,
-                                    "رقم الجوال": _IphoneController.text,
-                                    "الوظيفة": "إمام",
-                                    "رقم المسجد": _mosquenum.text,
-                                    "كلمة المرور": sha256
-                                        .convert(himampassword)
-                                        .toString(),
-                                    "جديد": newP,
-                                  };
-                                  final MuathenData = {
-                                    "رقم الهوية": _MidController.text,
-                                    "الإسم": _MnameController.text,
-                                    "رقم الجوال": _MphoneController.text,
-                                    "الوظيفة": "مؤذن",
-                                    "رقم المسجد": _mosquenum.text,
-                                    "كلمة المرور": sha256
-                                        .convert(hmuathenpassword)
-                                        .toString(),
-                                    "جديد": newP,
-                                  };
-                                  showAlertDialog(
-                                      context,
-                                      ImamData,
-                                      MuathenData,
-                                      muathenPassword,
-                                      imamPassword,
-                                      _IphoneController.text,
-                                      _MphoneController.text);
-                                }
-                                setState(() {});
-                              })),
-                    ],
+                                    final ImamData = {
+                                      "رقم الهوية": _IidController.text,
+                                      "الإسم": _InameController.text,
+                                      "رقم الجوال": _IphoneController.text,
+                                      "الوظيفة": "إمام",
+                                      "رقم المسجد": _mosquenum.text,
+                                      "كلمة المرور": sha256
+                                          .convert(himampassword)
+                                          .toString(),
+                                      "جديد": newP,
+                                    };
+                                    final MuathenData = {
+                                      "رقم الهوية": _MidController.text,
+                                      "الإسم": _MnameController.text,
+                                      "رقم الجوال": _MphoneController.text,
+                                      "الوظيفة": "مؤذن",
+                                      "رقم المسجد": _mosquenum.text,
+                                      "كلمة المرور": sha256
+                                          .convert(hmuathenpassword)
+                                          .toString(),
+                                      "جديد": newP,
+                                    };
+                                    showAlertDialog(
+                                        context,
+                                        ImamData,
+                                        MuathenData,
+                                        muathenPassword,
+                                        imamPassword,
+                                        _IphoneController.text,
+                                        _MphoneController.text);
+                                  }
+                                  setState(() {});
+                                })),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -712,7 +732,8 @@ class _createAccountsState extends State<createAccounts> {
         } else {
           setState(() {
             DuplicateNum = true;
-            DuplicateNumError = 'هذا المسجد ليس من ضمن المساجد المسموح بها';
+            DuplicateNumError =
+                'المسجد ليس من ضمن المساجد المتوفرة في قاعدة البيانات';
             _IidController.clear();
             _IphoneController.clear();
             _InameController.clear();

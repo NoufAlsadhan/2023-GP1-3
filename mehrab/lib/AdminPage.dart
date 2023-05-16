@@ -11,33 +11,25 @@ class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        
-       
         child: Scaffold(
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
               automaticallyImplyLeading: false,
               title: Align(
-                alignment: Alignment.topRight,
-             child: Text('الرئيسية '),),
+                alignment: Alignment.center,
+                child: Text('الرئيسية ',
+                    style: TextStyle(fontFamily: 'Elmessiri')),
+              ),
+              centerTitle: true,
               //backgroundColor: Color.fromARGB(255, 20, 5, 87),
-             actions: <Widget>[
-               Align(alignment: Alignment.topLeft,
-               child:
-                           IconButton(
-                              icon: Icon( 
-                                    Icons.logout_rounded,
-                                    color: Colors.white,
-                                       ),
-                                       alignment: Alignment.topLeft,
-                                   onPressed: () { Navigator.pop(context);}, 
-                              )
-             )
-              ],
-                         ), 
-
+            ),
             body: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -58,12 +50,9 @@ class AdminPage extends StatelessWidget {
                         width: 230,
                       ),
                     ),
-
-                    const SizedBox(height: 20,),
-                    
-                
-
-
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
                         height: 80,
                         width: 300,
@@ -74,18 +63,20 @@ class AdminPage extends StatelessWidget {
                             primary: Color.fromARGB(255, 20, 5, 87),
                           ),
                           child: const Text(' إضافة مسجد',
-                              style: TextStyle(fontFamily: 'Elmessiri', fontSize: 20)),
+                              style: TextStyle(
+                                  fontFamily: 'Elmessiri', fontSize: 20)),
                           onPressed: () {
-                    Navigator.push(
-                      context, MaterialPageRoute(
-                          builder: (context) =>  AddMosque()),
-                    );
-                  },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddMosque()),
+                            );
+                          },
                         )),
-
-                        const SizedBox(height: 20,),
-
-                        Container(
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
                         height: 80,
                         width: 300,
                         padding: const EdgeInsets.all(10),
@@ -95,21 +86,16 @@ class AdminPage extends StatelessWidget {
                             primary: Color.fromARGB(255, 20, 5, 87),
                           ),
                           child: const Text(' إنشاء حسابات المؤذن و الإمام',
-                              style: TextStyle(fontFamily: 'Elmessiri', fontSize: 20)),
+                              style: TextStyle(
+                                  fontFamily: 'Elmessiri', fontSize: 20)),
                           onPressed: () {
-                             
-                             Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => createAccounts()),
                             );
-
-
                           },
                         )),
-
-                        
-                    
                   ],
                 ),
               ),

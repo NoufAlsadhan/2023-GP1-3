@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,19 +46,30 @@ class _managersLogin extends State<ManagersLogin> {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              title: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'تسجيل الدخول',
-                  style: TextStyle(fontFamily: 'Elmessiri'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
                 ),
               ),
+              title: Text(
+                'تسجيل الدخول',
+                style: TextStyle(fontFamily: 'Elmessiri'),
+              ),
+              centerTitle: true,
               backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              leading: Container(), // Remove the leading back button
+              actions: [
+                IconButton(
+                  icon: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(math.pi),
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
             body: Container(
               decoration: BoxDecoration(
@@ -98,7 +110,7 @@ class _managersLogin extends State<ManagersLogin> {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: ' رقم الهوية',
+                            labelText: '* رقم الهوية',
                             labelStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontFamily: "Elmessiri",
@@ -124,7 +136,7 @@ class _managersLogin extends State<ManagersLogin> {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                   width: 1),
                             ),
-                            labelText: 'كلمة المرور',
+                            labelText: '* كلمة المرور',
                             labelStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontFamily: "Elmessiri",
@@ -152,12 +164,12 @@ class _managersLogin extends State<ManagersLogin> {
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
                           onPressed: () async {
-                            if (_nationalId.text.length != 10) {
+                            if (_nationalId.text.length != 10 &&
+                                _nationalId.text.isNotEmpty) {
                               return;
                             }
                             if (_nationalId.text.isEmpty ||
                                 _password.text.isEmpty) {
-                              _visible2 = false;
                               _toggle();
                             }
 
@@ -194,14 +206,6 @@ class _managersLogin extends State<ManagersLogin> {
                             }
                           },
                         )),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'هل نسيت كلمة المرور؟',
-                        style: TextStyle(
-                            color: Colors.grey[600], fontFamily: 'Elmessiri'),
-                      ),
-                    ),
                   ],
                 ),
               ),
