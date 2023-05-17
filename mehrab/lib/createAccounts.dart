@@ -314,6 +314,7 @@ class _createAccountsState extends State<createAccounts> {
                                 child: const Text('إنشاء',
                                     style: TextStyle(fontFamily: 'Elmessiri')),
                                 onPressed: () {
+                                  //Validations
                                   bool empt = false;
                                   bool falselength = false;
                                   if (_IidController.text.isEmpty ||
@@ -331,7 +332,7 @@ class _createAccountsState extends State<createAccounts> {
                                       _InameController.text == '' ||
                                       _MnameController.text == '') {
                                     empt = true;
-                                    _toggle();
+                                    _toggle(); //All fields are required
                                   }
                                   if (_IidController.text.isNotEmpty &&
                                       _IidController.text.isNotEmpty &&
@@ -363,6 +364,7 @@ class _createAccountsState extends State<createAccounts> {
                                       validIdM == true &&
                                       validPhoneI == true &&
                                       validPhoneM == true) {
+                                    //All inputs are in the correct form
                                     var muathenPassword =
                                         generateRandomPassword();
                                     var hmuathenpassword =
@@ -380,7 +382,7 @@ class _createAccountsState extends State<createAccounts> {
                                       "رقم المسجد": _mosquenum.text,
                                       "كلمة المرور": sha256
                                           .convert(himampassword)
-                                          .toString(),
+                                          .toString(), //Hash
                                       "جديد": newP,
                                     };
                                     final MuathenData = {
@@ -414,18 +416,21 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   void _toggle() {
+    //Validating
     setState(() {
       _visible = true;
     });
   }
 
   void _toggle1() {
+    //Validating
     setState(() {
       _visible = false;
     });
   }
 
   validateidI(String text) {
+    //Validating
     var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
       setState(() {
@@ -457,6 +462,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   validatuenumI(String text) {
+    //Validating
     var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
       setState(() {
@@ -480,6 +486,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   validateidM(String text) {
+    //Validating
     var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
       setState(() {
@@ -511,6 +518,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   validatuenumM(String text) {
+    //Validating
     var v = true;
     if (!(text.length == 10) && text.isNotEmpty) {
       setState(() {
@@ -536,6 +544,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   String generateRandomPassword() {
+    //Generating random password with 12 complexity
     var random = Random.secure();
     var password = '';
     var charset =
@@ -610,6 +619,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   createacc(
+      //Creating the acc and adding it to the database
       Map<String, dynamic> imamData,
       Map<String, dynamic> muathenData,
       String muathenPassword,
@@ -628,6 +638,7 @@ class _createAccountsState extends State<createAccounts> {
         .onError((e, _) => print("Error writing document: $e"));
 
     sending_SMS(
+        //Sending SMS with credentials
         'تم إنشاء حساب لك في تطبيق محراب, نرجو الدخول برقم الهوية وكلمة المرور المرفقة $imamPassword مع العلم أنه يجب عليك تغيير كلمة المرور عند دخولك للتطبيق, شكرًا لاستخدامك محراب.',
         [iphone]);
 
@@ -672,6 +683,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   void sending_SMS(String msg, List<String> list_receipents) async {
+    //Sending the sms without redirecting to the sms app
     if (await Permission.sms.request().isGranted) {
       String send_result = await sendSMS(
               message: msg, recipients: list_receipents, sendDirect: true)
@@ -683,6 +695,7 @@ class _createAccountsState extends State<createAccounts> {
   }
 
   void _isDuplicate(String text) {
+    //Validating
     setState(() {
       _mosquenum.text = text;
     });

@@ -151,11 +151,13 @@ class _newPassword extends State<newPassword> {
                                 _password2.text.isNotEmpty &&
                                 validChar == true &&
                                 _password1.text == _password2.text) {
+                              //Validation
                               var hpassword = utf8.encode(_password1.text);
                               db.collection("Account").doc(widget.id).update({
                                 'جديد': 'false',
-                                'كلمة المرور':
-                                    sha256.convert(hpassword).toString()
+                                'كلمة المرور': sha256
+                                    .convert(hpassword)
+                                    .toString() //Hashing the password
                               });
 
                               showAlertDialog();
@@ -203,6 +205,7 @@ class _newPassword extends State<newPassword> {
   }
 
   void _validate1(String value) {
+    //Forcing password complexity
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-_!@#\$&*~]).{12,}$';
     RegExp regExp = new RegExp(pattern);
@@ -221,20 +224,6 @@ class _newPassword extends State<newPassword> {
       });
     }
   }
-
-  /*  if (value.length < 12 && value.isNotEmpty) {
-      setState(() {
-        validChar = false;
-        charError = 'كلمة المرور يجب أن تكون 12 حرف';
-      });
-    }
-    if (value.length >= 12 && value.isNotEmpty) {
-      setState(() {
-        validChar = true;
-        charError = null;
-      });
-    }
-  }*/
 
   _validate2(String value) {
     if (value != _password1.text &&

@@ -166,18 +166,22 @@ class _managersLogin extends State<ManagersLogin> {
                           onPressed: () async {
                             if (_nationalId.text.length != 10 &&
                                 _nationalId.text.isNotEmpty) {
+                              //Validate the length of the National ID
                               return;
                             }
-                            if (_nationalId.text.isEmpty ||
+                            if (_nationalId.text
+                                    .isEmpty || //Validate that fields cannot be empty when submit the form
                                 _password.text.isEmpty) {
                               _toggle();
                             }
 
                             if (_nationalId.text.isNotEmpty &&
                                 _password.text.isNotEmpty) {
+                              //Fields are full
                               _toggle1();
 
-                              var val = await validateAuthentication();
+                              var val =
+                                  await validateAuthentication(); //Authenticate with right credentials
 
                               setState(() {
                                 _visible2 = val;
@@ -213,18 +217,21 @@ class _managersLogin extends State<ManagersLogin> {
   }
 
   void _toggle() {
+    //Validation
     setState(() {
       _visible = true;
     });
   }
 
   void _toggle1() {
+    //Validation
     setState(() {
       _visible = false;
     });
   }
 
   Future<bool> validateAuthentication() async {
+    //Validation
     bool found = true;
     var hpassword = utf8.encode(_password.text);
     var h = sha256.convert(hpassword).toString();
