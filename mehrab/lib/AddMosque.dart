@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:mehrab/AddMosque.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'dart:math';
 import 'dart:math' as math;
@@ -22,8 +21,7 @@ final TextEditingController _MuathenName = TextEditingController();
 final TextEditingController _MosqueImage = TextEditingController();
 var db = FirebaseFirestore.instance;
 String imageUrl = '';
-//GoogleMapController? _Loccontroller;
-//Set<Marker> _markers = Set<Marker>();
+
 
 class AddMosque extends StatefulWidget {
   _AddMosqueState createState() => _AddMosqueState();
@@ -38,13 +36,13 @@ class _AddMosqueState extends State<AddMosque> {
         FirebaseFirestore.instance.collection('Mosque');
     late Stream<QuerySnapshot> _stream;
     _stream = collectionRef.snapshots();
-    _Mosquenum.text = ''; //1
-    _MosqueNameController.text = ''; //2
-    _District.text = ''; //3
-    _LocLink.text = ''; //4
-    _ImamName.text = ''; //5
-    _MuathenName.text = ''; //6
-    _MosqueImage.text = ''; //7
+    _Mosquenum.text = ''; 
+    _MosqueNameController.text = ''; 
+    _District.text = ''; 
+    _LocLink.text = ''; 
+    _ImamName.text = ''; 
+    _MuathenName.text = ''; 
+    _MosqueImage.text = ''; 
   }
 
   bool _visible = false;
@@ -53,7 +51,6 @@ class _AddMosqueState extends State<AddMosque> {
   var ImageErrorMessage = '';
   var UrlErrorMessage = '';
   var MosqueNameErrorMessage = '';
-  //var validNumErrorMessage ='';
   var validNum = true;
   var validUrl = true;
   var validMname = true;
@@ -95,7 +92,6 @@ class _AddMosqueState extends State<AddMosque> {
               ],
             ),
 
-//padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             body: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -116,7 +112,6 @@ class _AddMosqueState extends State<AddMosque> {
                           padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
                         ),
                         Container(
-                          //height: 100,
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -144,9 +139,9 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //Mosque number container
+
                         Container(
-                          //height: 100,
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -173,9 +168,9 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //Mosque name container
+
                         Container(
-                          //height: 100,
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -198,9 +193,9 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //District container
+
                         Container(
-                          //height: 100,
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -223,9 +218,9 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //Imam name container
+
                         Container(
-                          //height: 100,
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -248,7 +243,8 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //Muathen name controller
+
                         const SizedBox(
                           height: 20,
                         ),
@@ -307,11 +303,14 @@ class _AddMosqueState extends State<AddMosque> {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                 )),
                           ),
-                        ),
+                        ), //adding mosque image container
+
                         Visibility(
                             visible: _visible2,
                             child: Text('تم إدراج صورة المسجد بنجاح',
-                                style: TextStyle(color: Colors.green))),
+                                style: TextStyle(color: Colors.green))), 
+                            //feedback after adding image successfully
+
                         Container(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
@@ -338,7 +337,8 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ),
+                        ), //URL container 
+
                         const SizedBox(
                           height: 20,
                         ),
@@ -346,6 +346,8 @@ class _AddMosqueState extends State<AddMosque> {
                             visible: _visible,
                             child: Text(' جميع الحقول مطلوبة *',
                                 style: TextStyle(color: Colors.red))),
+                              //feedback of filling all fields
+
                         Container(
                             height: 80,
                             padding: const EdgeInsets.all(20),
@@ -403,7 +405,6 @@ class _AddMosqueState extends State<AddMosque> {
                                       falselength == false &&
                                       validNum == true) {
                                     final MosqueData = {
-                                      //"ID": _Mosquenum.text,
                                       "Name": _MosqueNameController.text,
                                       "District": _District.text,
                                       "Location": _LocLink.text,
@@ -414,11 +415,10 @@ class _AddMosqueState extends State<AddMosque> {
 
                                     var uri = Uri.parse(_LocLink.text);
                                     print(uri);
-
                                     showAlertDialog(context, MosqueData);
                                   }
                                   setState(() {});
-                                })),
+                                })),  //end of add button
                       ],
                     ),
                   ),
@@ -429,19 +429,19 @@ class _AddMosqueState extends State<AddMosque> {
     setState(() {
       _visible = true;
     });
-  }
+  } //check empty fields
 
   void _toggle1() {
     setState(() {
       _visible = false;
     });
-  }
+  }//check non empty fields
 
   void _toggle2() {
     setState(() {
       _visible2 = true;
     });
-  }
+  } //check the url 
 
   validateUrl(String text) async {
     var v = true;
@@ -511,7 +511,7 @@ class _AddMosqueState extends State<AddMosque> {
         });
       }
     }
-  }
+  } //validating mosque number
 
   showAlertDialog(
     BuildContext context,
@@ -566,7 +566,7 @@ class _AddMosqueState extends State<AddMosque> {
         return alert;
       },
     );
-  }
+  } //confirmation msg after validating all input and clicking add button
 
   Add(
     Map<String, dynamic> MosqueData,
@@ -574,8 +574,7 @@ class _AddMosqueState extends State<AddMosque> {
     db
         .collection('Mosque')
         .doc(_Mosquenum.text)
-        //.doc()
         .set(MosqueData)
         .onError((e, _) => print("Error writing document: $e"));
   }
-}
+} //adding the mosque data to Mehrab database

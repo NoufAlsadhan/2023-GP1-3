@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mehrab/AdminPage.dart';
 import 'package:mehrab/AdminLogin.dart';
-//import 'package:mehrab/newPassword.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
@@ -22,14 +21,11 @@ var idErrormag = '';
 bool idError = false;
 var db = FirebaseFirestore.instance;
 var id;
-var _new;
+
 
 class AdminLogin extends StatefulWidget {
   _AdminLogin createState() => _AdminLogin();
 }
-
-/*class _AdminLogin extends StatelessWidget {
-  const AdminLogin({super.key}); */
 
 class _AdminLogin extends State<AdminLogin> {
   @override
@@ -79,6 +75,7 @@ class _AdminLogin extends State<AdminLogin> {
                 ),
               ],
             ),
+
             body: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -104,8 +101,6 @@ class _AdminLogin extends State<AdminLogin> {
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
-                          //keyboardType: TextInputType.number,
-                          onFieldSubmitted: validateId,
                           controller: _Username,
                           decoration: InputDecoration(
                             errorText: idError == true ? idErrormag : null,
@@ -126,7 +121,9 @@ class _AdminLogin extends State<AdminLogin> {
                           ),
                         ),
                       ),
-                    ),
+                    ), //Username container
+
+
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Directionality(
@@ -152,15 +149,21 @@ class _AdminLogin extends State<AdminLogin> {
                           ),
                         ),
                       ),
-                    ),
+                    ), //Password container
+
+
                     Visibility(
                         visible: _visible,
                         child: Text(' جميع الحقول مطلوبة *',
                             style: TextStyle(color: Colors.red))),
+                        //error msg that appear when fields are empty
+
                     Visibility(
                         visible: _visible2,
                         child: Text(' إسم المستخدم  أو كلمة المرور غير صحيحة',
                             style: TextStyle(color: Colors.red))),
+                        //error msg that appear when username or password are empty
+
                     Container(
                         height: 80,
                         padding: const EdgeInsets.all(20),
@@ -172,29 +175,19 @@ class _AdminLogin extends State<AdminLogin> {
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
                           onPressed: () async {
-                            /* Navigator.push(
-                      context, MaterialPageRoute(
-                          builder: (context) => const AdminPage()),
-                    ); */
-
-                            /*var  hpassword;
-                             hpassword = utf8.encode('admin111');
-                            var h = sha256.convert(hpassword).toString();
-                            print('hello');
-                            print(h); */
 
                             if (_Username.text.isEmpty ||
                                 _password.text.isEmpty) {
                               _visible2 = false;
                               _toggle();
-                            }
+                            }// th check if fields are empty
 
                             if (_Username.text.isNotEmpty &&
                                 _password.text.isNotEmpty) {
-                              _toggle1();
+                              _toggle1(); //to ensure that fields are not empty 
 
                               var val = await validateAuthentication();
-                              print(val);
+                              //authenticate the admin
 
                               setState(() {
                                 _visible2 = val;
@@ -202,24 +195,15 @@ class _AdminLogin extends State<AdminLogin> {
 
                               if (_visible2 == true) {
                               } else {
-                                if (_new == "false") {
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AdminPage(
-                                              id: id,
-                                            )),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                } else {
+                               
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => AdminPage(
                                                 id: id,
                                               )));
-                                }
-                              }
+                                
+                              } 
                             }
                           },
                         )),
@@ -233,13 +217,13 @@ class _AdminLogin extends State<AdminLogin> {
     setState(() {
       _visible = true;
     });
-  }
+  } // th check if fields are empty
 
   void _toggle1() {
     setState(() {
       _visible = false;
     });
-  }
+  } //to ensure that fields are not empty 
 
   Future<bool> validateAuthentication() async {
     bool found = true;
@@ -253,26 +237,19 @@ class _AdminLogin extends State<AdminLogin> {
         .get()
         .then((querySnapshot) async {
       if (querySnapshot.docs.isNotEmpty) {
-        //print('lama');
         final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         found = false;
         id = documentSnapshot.id;
         await db.collection('Admin').doc(id).get().then((docSnapshot) {
           if (docSnapshot.exists) {
-            _new = docSnapshot.data()!['جديد'];
           }
         });
       }
     });
     return found;
-  }
+  } // method to authenticate the admin 
 
-  validateId(text) {
-    setState(() {
-      idError = false;
-      idErrormag = '';
-    });
-  }
+  
 }//end of file 
 
 
