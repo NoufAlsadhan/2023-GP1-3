@@ -4,10 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
 
 class ItemDetailsScreen extends StatelessWidget {
-  final DocumentSnapshot post;
+final DocumentSnapshot post;
 
+  //to show the Item detail screen for the selected list tile (list item)
   ItemDetailsScreen(this.post);
 
+  // create the location url and retreving the location from the DB 
   _launchURL() async {
     Uri _url = Uri.parse(post['Location']);
     if (await launchUrl(_url)) {
@@ -18,57 +20,38 @@ class ItemDetailsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-
-
-
-
-
+Widget build(BuildContext context) {
+return Scaffold(
+resizeToAvoidBottomInset: false,
 appBar: AppBar(
-
 shape: RoundedRectangleBorder(
-
 borderRadius: BorderRadius.vertical(
-
- bottom: Radius.circular(20),
-
- ),
-
- ),
-
-leading: Container(), // Remove the leading back button
-
-actions: [
-
-IconButton(
-
-icon: Transform(
-
-alignment: Alignment.center,
-
-transform: Matrix4.rotationY(math.pi),
-
-child: Icon(Icons.arrow_back),
-
+bottom: Radius.circular(20),
 ),
-
+),
+leading: Container(), 
+actions: [
+IconButton(
+icon: Transform(
+alignment: Alignment.center,
+transform: Matrix4.rotationY(math.pi),
+child: Icon(Icons.arrow_back),
+),
 onPressed: () {
 Navigator.pop(context);
 },
 ),
 ],
-
-automaticallyImplyLeading: false,
+automaticallyImplyLeading: false, // this is used the remove the automatic leading
 centerTitle: true,
 backgroundColor: Color.fromARGB(255, 20, 5, 87),
+
+//adding the mosque name as a title in the Appbar
 title: Text(
 post['Name'],
 style: TextStyle(fontFamily: 'Elmessiri'),
 ),
-
- ),
+),
 
 
       body: SingleChildScrollView(
@@ -79,23 +62,21 @@ style: TextStyle(fontFamily: 'Elmessiri'),
               fit: BoxFit.cover,
             ),
           ),
+          
           child: Column(
             children: <Widget>[
               Row(
-                //mainAxisAlignment: MainAxisAlignment.end,
-                //alignment: Alignment.topRight,
                 children: [
                   Expanded(
-                    child: Column(
-                      ///////////////////
+                    child: Column( 
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
-
                       children: <Widget>[
                         SizedBox(height: 20),
                         Container(
                           width: 450,
                           height: 250,
+                          //Adding the images retrived from the DB
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
@@ -105,12 +86,12 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                             ),
                           ),
                         ),
+
+                        /*create column of rows , column for التفاصيل text and the rows for the 
+                        district name , google maps location and mosque managers names  */
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            //Align(
-                            //alignment:Alignment.centerRight,
-                            /* child:*/ Text(
+                          children: [ Text(
                               'التفاصيل ',
                               style: new TextStyle(
                                 fontFamily: 'Elmessiri',
@@ -120,17 +101,13 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                               ),
                             ),
 
-                            //),
-
                             Row(
-                              // crossAxisAlignment: CrossAxisAlignment.end ,
                               children: [
                                 Expanded(
                                   child: Text('الحي: ${post['District']}',
                                       textAlign: TextAlign.right,
                                       style: new TextStyle(
                                         fontFamily: 'Elmessiri',
-                                        // fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                         color: Color.fromARGB(255, 20, 5, 87),
                                       )),
@@ -145,7 +122,7 @@ style: TextStyle(fontFamily: 'Elmessiri'),
 
                             Row(
                               children: [
-                                Expanded(
+                                Expanded( //open location with google maps
                                   child: InkWell(
                                     onTap: _launchURL,
                                     child: const Text(
@@ -153,7 +130,6 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
                                         fontFamily: 'Elmessiri',
-                                        //fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                         color:
                                             Color.fromARGB(255, 37, 171, 238),
@@ -177,14 +153,11 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                                       textAlign: TextAlign.right,
                                       style: new TextStyle(
                                           fontFamily: 'Elmessiri',
-                                          // fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                           color:
                                               Color.fromARGB(255, 20, 5, 87))),
                                 ),
 
-                                // tooltip: 'Increase volume by 10',
-                                //),
                                 Icon(
                                   Icons.person_2_outlined,
                                   color: Color.fromRGBO(212, 175, 55, 1),
@@ -201,8 +174,6 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                                       style: new TextStyle(
                                           fontFamily: 'Elmessiri',
 
-                                          //     fontWeight: FontWeight.bold,
-
                                           fontSize: 18,
                                           color:
                                               Color.fromARGB(255, 20, 5, 87))),
@@ -216,6 +187,8 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                             ),
                           ],
                         ),
+
+                      //create column for the announcements 
                         Column(
                           children: const [
                             Divider(
@@ -237,14 +210,12 @@ style: TextStyle(fontFamily: 'Elmessiri'),
                               'لا يوجد مستجدات حالية',
                               style: TextStyle(
                                 fontSize: 14,
-                                //fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 166, 165, 167),
                                 fontFamily: 'Elmessiri',
                               ),
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
-                              // child: Text("Bottom text"),
                             ),
                            SizedBox(height: 190 ),
 
