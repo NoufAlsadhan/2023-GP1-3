@@ -17,7 +17,7 @@ final _mosque = FirebaseFirestore.instance.collection('Mosque').snapshots();
 final db = FirebaseFirestore.instance; 
 var id;
 
-
+// nevigate to the itemdetail (coonected with onTap in the list tile)
 navigateToDetail(DocumentSnapshot post){
   Navigator.push(context, MaterialPageRoute(builder: (context)=>ItemDetailsScreen(post=post,)));
 }
@@ -33,7 +33,6 @@ borderRadius: BorderRadius.vertical(
 bottom: Radius.circular(20),
 
  ),
-
 ),
 centerTitle: true,
 title: Align(
@@ -46,7 +45,8 @@ title: Align(
   automaticallyImplyLeading: false,
   backgroundColor:  Color.fromARGB(255, 20, 5, 87),
         ),
- 
+
+    // create the navigation bar  
     bottomNavigationBar: BottomNavigationBar(
     currentIndex: 3,
     selectedItemColor: Colors.blue,
@@ -73,10 +73,7 @@ title: Align(
         icon: Icon(Icons.home),
         label: 'الرئيسية',
 
-     
-      ),
-      
-
+      ),   
     ],
   ),
 
@@ -87,103 +84,85 @@ image: AssetImage("images/background2.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),
-  child:StreamBuilder(  
+
+ 
+          child:StreamBuilder(  
   
           stream:_mosque,
   
           builder:(context, snapshot){
   
-            if(snapshot.hasError){
-  
-             return const Text('مشكلة بالاتصال');
-  
+            if(snapshot.hasError){ 
+             return Center(
+               child: const Text('مشكلة بالاتصال',
+                                        style:TextStyle(
+                                        fontFamily: 'Elmessiri',
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 20, 5, 87),
+                                        ),),
+             ); 
             }
   
-           if(snapshot.connectionState== ConnectionState.waiting){
-  
-            return const Text('...جاري التحميل');
-  
+           if(snapshot.connectionState== ConnectionState.waiting){ 
+            return Center(
+              child: const Text('...جاري التحميل',
+                                        style:TextStyle(
+                                        fontFamily: 'Elmessiri',
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 20, 5, 87),
+                                        ),),
+            ); 
             }
   
-           if (snapshot.data == null) {
-  
-          return const Text('no data');
-  
+           if (snapshot.data == null) { 
+          return Center(
+            child: const Text('لا يوجد معلومات',
+                                        style:TextStyle(
+                                        fontFamily: 'Elmessiri',
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 20, 5, 87),
+                                        ),),
+          ); 
            }
-  
-  
-  
+
+          //Retrive the documents 
           var docs = snapshot.data!.docs;
-  
-  
-  
-  
-  
+
+          //start bulidng the list 
            return ListView.builder(
-  
-             padding: EdgeInsets.only(top: 20.0),
-  
-              itemCount: docs.length,
-  
-              
-  
+             padding: EdgeInsets.only(top: 20.0),  
+              itemCount: docs.length,// to stop the list on the DB document length  
               itemBuilder: (context, index){
-  
-  
-  
+
+              //list tile is the list item which contain image , mosque name and district name retrived from the DB
               return Card(child : ListTile(
-  
-                
-  
                 shape: RoundedRectangleBorder( 
-  
                 side: BorderSide(width: 1, color:Color.fromARGB(255, 213, 213, 213)),
-  
                 borderRadius: BorderRadius.circular(10),
-  
-                  ),         
-  
-              
-  
-        onTap: () {
-  
+                  ),  
+        //To naviagte to itemdetail UI           
+        onTap: () { 
         navigateToDetail(docs[index]);
-  
         },
   
-            trailing: Container(
-  
-              width:80,
-  
-              height: 80,
-  
-              child: ClipRRect(
-  
-              borderRadius: BorderRadius.circular(18),
-  
-              child: Image.network(docs[index]['Image'], 
-  
-              fit: BoxFit.cover ,
-  
-                    ),
-  
-                   ),
-  
+            trailing: Container( 
+              width:80, 
+              height: 80,  
+              child: ClipRRect(  
+              borderRadius: BorderRadius.circular(18), 
+              child: Image.network(docs[index]['Image'], //Retriveing from the DB  
+              fit: BoxFit.cover ,  
+                    ), 
+                   ), 
             ), 
-  
-                title: Text(docs[index]['Name'],textAlign: TextAlign.right, style: TextStyle(fontFamily: 'Elmessiri'),),
-                subtitle:Text ( 'حي '+ docs[index]['District'] ,textAlign: TextAlign.right,  style: TextStyle(fontFamily: 'Elmessiri'),),
-  
-                
-  
+            
+                  title: Text(docs[index]['Name'],textAlign: TextAlign.right, style: TextStyle(fontFamily: 'Elmessiri'),), //Retriveing from the DB
+                subtitle:Text ( 'حي '+ docs[index]['District'] ,textAlign: TextAlign.right,  style: TextStyle(fontFamily: 'Elmessiri'),), //Retriveing from the DB
                 ),);
               });
           }
-
-  
           ),
-),
-        
-  );
+),        
+);
 }
 }
