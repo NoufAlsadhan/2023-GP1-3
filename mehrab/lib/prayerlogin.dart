@@ -91,7 +91,7 @@ class _prayerlogin extends State<prayerlogin> {
               ),
 
               title: Text(
-                ' تسجيل الدخول ',
+                'تسجيل الدخول',
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
 
@@ -320,6 +320,7 @@ class _prayerlogin extends State<prayerlogin> {
     });
   }
 }//end of file
+
 
 
 
