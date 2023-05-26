@@ -22,6 +22,7 @@ class _ReadlistviewState extends State<Readlistview> {
     if (!myArray.contains(docs[index].id)) {
       //I joined(the button says leave)
       myArray.add(docs[index].id);
+      showAlertDialog('إنضمام', docs[index]['Name']);
       try {
         await FirebaseFirestore.instance
             .collection('prayer')
@@ -37,6 +38,7 @@ class _ReadlistviewState extends State<Readlistview> {
     }
 
     if (myArray.contains(docs[index].id)) {
+      showAlertDialog('مغادرة', docs[index]['Name']);
       //I joined(the button says leave)
       myArray.remove(docs[index].id);
       try {
@@ -240,6 +242,47 @@ class _ReadlistviewState extends State<Readlistview> {
                   });
             }),
       ),
+    );
+  }
+
+  showAlertDialog(String text, String name) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("حسنًا", style: TextStyle(fontFamily: 'Elmessiri')),
+      onPressed: () {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+    );
+
+    // set up the AlertDialog
+
+    AlertDialog alert;
+    if (text == 'مغادرة') {
+      alert = AlertDialog(
+        content: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text('تمت مغادرتك من $name',
+              style: TextStyle(fontFamily: 'Elmessiri')),
+        ),
+        actions: [cancelButton],
+      );
+    } else {
+      alert = AlertDialog(
+        content: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text('تم إنضمامك لـ$name',
+              style: TextStyle(fontFamily: 'Elmessiri')),
+        ),
+        actions: [cancelButton],
+      );
+    }
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
