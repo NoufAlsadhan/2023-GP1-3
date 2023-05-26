@@ -48,8 +48,6 @@ var db = FirebaseFirestore.instance;
 
 var id;
 
-var _new;
-
 class prayerlogin extends StatefulWidget {
   _prayerlogin createState() => _prayerlogin();
 }
@@ -229,20 +227,14 @@ class _prayerlogin extends State<prayerlogin> {
 
                               if (_visible2 == true) {
                               } else {
-                                if (_new == "false") {
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Readlistview()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                } else {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Readlistview()));
-                                }
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Readlistview(
+                                            username: id,
+                                          )),
+                                  (Route<dynamic> route) => false,
+                                );
                               }
                             }
                           },
@@ -300,12 +292,6 @@ class _prayerlogin extends State<prayerlogin> {
         found = false;
 
         id = documentSnapshot.id;
-
-        await db.collection('prayer').doc(id).get().then((docSnapshot) {
-          if (docSnapshot.exists) {
-            _new = docSnapshot.data()!['جديد'];
-          }
-        });
       }
     });
 
