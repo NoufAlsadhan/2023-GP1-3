@@ -30,10 +30,20 @@ class _ReadlistviewState extends State<Readlistview> {
             .update({
           'joinedMosques': FieldValue.arrayUnion([docs[index].id])
         });
+
+        await FirebaseFirestore.instance
+            .collection('Mosque')
+            .doc(docs[index].id)
+            .update({
+          'joinedPrayers': FieldValue.arrayUnion([widget.username])
+        });
+        print('Item added to myArrayField successfully');
+
         print('Item added to myArrayField successfully');
       } catch (e) {
         print('Error adding item to myArrayField: $e');
       }
+
       return;
     }
 
@@ -47,6 +57,13 @@ class _ReadlistviewState extends State<Readlistview> {
             .doc(widget.username)
             .update({
           'joinedMosques': FieldValue.arrayRemove([docs[index].id])
+        });
+
+        await FirebaseFirestore.instance
+            .collection('Mosque')
+            .doc(docs[index].id)
+            .update({
+          'joinedPrayers': FieldValue.arrayRemove([widget.username])
         });
         print('Item removed from myArrayField successfully');
       } catch (e) {
