@@ -62,6 +62,10 @@ class _managersPage extends State<managersPage> {
                 label: 'الملف الشخصي',
               ),
               BottomNavigationBarItem(
+                icon: Icon(Icons.key),
+                label: 'المفتاح',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'المحادثات',
               ),
