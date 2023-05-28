@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mehrab/ItemDetailsScreen.dart';
-import 'package:mehrab/myMosques.dart';
+import 'package:mehrab/Readlistview.dart';
 
-class Readlistview extends StatefulWidget {
+class myMosques extends StatefulWidget {
   final String username;
-  const Readlistview({required this.username});
+  const myMosques({required this.username});
 
   @override
-  State<Readlistview> createState() => _ReadlistviewState();
+  State<myMosques> createState() => _myMosquesState();
 }
 
-class _ReadlistviewState extends State<Readlistview> {
-  int _selectedIndex = 3;
+class _myMosquesState extends State<myMosques> {
+  int _selectedIndex = 2;
   final _mosque = FirebaseFirestore.instance.collection('Mosque').snapshots();
   final db = FirebaseFirestore.instance;
   var id;
@@ -97,7 +97,7 @@ class _ReadlistviewState extends State<Readlistview> {
         centerTitle: true,
         title: Align(
           child: Text(
-            "قائمة المساجد",
+            "مساجدي",
             style: TextStyle(fontFamily: 'Elmessiri'),
           ),
         ),
@@ -107,7 +107,7 @@ class _ReadlistviewState extends State<Readlistview> {
 
       // create the navigation bar
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
+        currentIndex: 2,
         selectedItemColor: Color.fromARGB(255, 38, 25, 152),
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -180,14 +180,14 @@ class _ReadlistviewState extends State<Readlistview> {
                 );
               }
 
-              if (snapshot.data == null) {
+              if (snapshot.data == null || myArray.isEmpty) {
                 return Center(
                   child: const Text(
-                    'لا يوجد معلومات',
+                    '.لم تنضم إلى أي مسجد',
                     style: TextStyle(
                       fontFamily: 'Elmessiri',
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 20, 5, 87),
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
                   ),
                 );
@@ -195,12 +195,15 @@ class _ReadlistviewState extends State<Readlistview> {
 
               //Retrive the documents
               var docs = snapshot.data!.docs;
+              //Filtering only jouned mosques
+              var filteredDocuments =
+                  docs.where((doc) => myArray.contains(doc.id)).toList();
 
               //start bulidng the list
               return ListView.builder(
                   padding: EdgeInsets.only(top: 20.0),
-                  itemCount:
-                      docs.length, // to stop the list on the DB document length
+                  itemCount: filteredDocuments
+                      .length, // to stop the list on the DB document length
                   itemBuilder: (context, index) {
                     //list tile is the list item which contain image , mosque name and district name retrived from the DB
                     return Card(
@@ -213,21 +216,22 @@ class _ReadlistviewState extends State<Readlistview> {
                         ),
                         //To naviagte to itemdetail UI
                         onTap: () {
-                          navigateToDetail(docs[index]);
+                          navigateToDetail(filteredDocuments[index]);
                         },
                         leading: ElevatedButton(
                           onPressed: () {
-                            toggleJoin(index, docs);
+                            toggleJoin(index, filteredDocuments);
                           },
                           child: Text(
-                            myArray.contains(docs[index].id)
+                            myArray.contains(filteredDocuments[index].id)
                                 ? 'مغادرة'
                                 : 'إنضمام',
                             style: TextStyle(
                                 fontFamily: 'Elmessiri', fontSize: 10),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: myArray.contains(docs[index].id)
+                            primary: myArray
+                                    .contains(filteredDocuments[index].id)
                                 ? Color.fromARGB(255, 38, 25,
                                     152) // set the button color to red if the text is 'مغادرة'
                                 : Color.fromRGBO(212, 175, 55, 1),
@@ -242,19 +246,20 @@ class _ReadlistviewState extends State<Readlistview> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(18),
                             child: Image.network(
-                              docs[index]['Image'], //Retriveing from the DB
+                              filteredDocuments[index]
+                                  ['Image'], //Retriveing from the DB
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
 
                         title: Text(
-                          docs[index]['Name'],
+                          filteredDocuments[index]['Name'],
                           textAlign: TextAlign.right,
                           style: TextStyle(fontFamily: 'Elmessiri'),
                         ), //Retriveing from the DB
                         subtitle: Text(
-                          'حي ' + docs[index]['District'],
+                          'حي ' + filteredDocuments[index]['District'],
                           textAlign: TextAlign.right,
                           style: TextStyle(fontFamily: 'Elmessiri'),
                         ), //Retriveing from the DB
@@ -312,11 +317,11 @@ class _ReadlistviewState extends State<Readlistview> {
       _selectedIndex = index;
     });
 
-    if (_selectedIndex == 2) {
+    if (_selectedIndex == 3) {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => myMosques(
+            builder: (context) => Readlistview(
                   username: widget.username,
                 )),
       );
