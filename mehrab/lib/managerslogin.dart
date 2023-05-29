@@ -20,6 +20,7 @@ bool idError = false;
 var db = FirebaseFirestore.instance;
 var id;
 var _new;
+var mosqueId;
 
 class ManagersLogin extends StatefulWidget {
   _managersLogin createState() => _managersLogin();
@@ -193,8 +194,9 @@ class _managersLogin extends State<ManagersLogin> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => managersPage(
-                                              id: id,
+                                        builder: (context) => ManagersPage(
+                                             
+                                              mosqueId: mosqueId,
                                             )),
                                     (Route<dynamic> route) => false,
                                   );
@@ -245,10 +247,12 @@ class _managersLogin extends State<ManagersLogin> {
       if (querySnapshot.docs.isNotEmpty) {
         final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         found = false;
+        
         id = documentSnapshot.id;
         await db.collection('Account').doc(id).get().then((docSnapshot) {
           if (docSnapshot.exists) {
             _new = docSnapshot.data()!['جديد'];
+            mosqueId=docSnapshot.data()!['رقم المسجد'];
           }
         });
       }
