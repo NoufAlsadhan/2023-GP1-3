@@ -195,9 +195,7 @@ class _managersLogin extends State<ManagersLogin> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ManagersPage(
-                                             
-                                              mosqueId: mosqueId,
-                                            )),
+                                            mosqueId: mosqueId, id: id)),
                                     (Route<dynamic> route) => false,
                                   );
                                 } else {
@@ -247,12 +245,12 @@ class _managersLogin extends State<ManagersLogin> {
       if (querySnapshot.docs.isNotEmpty) {
         final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         found = false;
-        
+
         id = documentSnapshot.id;
         await db.collection('Account').doc(id).get().then((docSnapshot) {
           if (docSnapshot.exists) {
             _new = docSnapshot.data()!['جديد'];
-            mosqueId=docSnapshot.data()!['رقم المسجد'];
+            mosqueId = docSnapshot.data()!['رقم المسجد'];
           }
         });
       }

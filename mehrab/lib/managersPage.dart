@@ -1,16 +1,19 @@
-import 'dart:developer'; 
+import 'dart:developer';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:mehrab/lock.dart';
 
 class ManagersPage extends StatefulWidget {
-  final String mosqueId; 
-  const ManagersPage({
-    super.key,
-    required this.mosqueId,//received from managers login page to know what exact mosque to fetch its data
-  });
+  final String mosqueId;
+  final String id;
+  const ManagersPage(
+      {super.key,
+      required this.mosqueId,
+      required this.id //received from managers login page to know what exact mosque to fetch its data
+      });
 
   @override
   _managersPage createState() => _managersPage();
@@ -19,9 +22,11 @@ class ManagersPage extends StatefulWidget {
 class _managersPage extends State<ManagersPage> {
   late String mosqueId = widget.mosqueId; //late to be initialized later
   final db = FirebaseFirestore.instance;
+  int _selectedIndex = 3;
 
   List<String> _prayer = []; //array to store prayers usernames
-  List<Map<String, dynamic>> mosqueMembers = []; //declared like this because it carries different data types
+  List<Map<String, dynamic>> mosqueMembers =
+      []; //declared like this because it carries different data types
   bool loading = false;
 
   Future<void> fetchMosque() async {
@@ -51,7 +56,8 @@ class _managersPage extends State<ManagersPage> {
   Future<void> fetchPrayersData() async {
     setState(() {
       loading = true;
-      mosqueMembers.clear(); //clear this array each time we run the code to avoid overlapping
+      mosqueMembers
+          .clear(); //clear this array each time we run the code to avoid overlapping
     });
     for (var i in _prayer) {
       try {
@@ -71,7 +77,7 @@ class _managersPage extends State<ManagersPage> {
         });
         debugPrint('error: $error');
       }
-    }// for loop that brings all prayers data joined that mosque
+    } // for loop that brings all prayers data joined that mosque
   } //end fetch each prayer data
 
   @override
@@ -82,12 +88,14 @@ class _managersPage extends State<ManagersPage> {
 
   void fetchData() async {
     await fetchMosque().then((_) {
-      if (_prayer.isNotEmpty) { //check that array prayers is not empty
+      if (_prayer.isNotEmpty) {
+        //check that array prayers is not empty
         log("members in this mosque");
         fetchPrayersData().then((_) {
           setState(() {});
         });
-      } else { //if there are no prayers in that mosque the code will log a text
+      } else {
+        //if there are no prayers in that mosque the code will log a text
         log("no members in this mosque");
       }
     });
@@ -110,27 +118,29 @@ class _managersPage extends State<ManagersPage> {
           ),
         ),
         automaticallyImplyLeading: false, //backbutton
-        backgroundColor: const Color.fromARGB(255, 20, 5, 87),
+        backgroundColor: Color.fromARGB(255, 38, 25, 152),
       ),
 
       // create the navigation bar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Color.fromARGB(255, 38, 25, 152),
         type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          _onItemTapped(index);
+        },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'الملف الشخصي',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'الإشعارات',
+            icon: Icon(Icons.key),
+            label: 'المفتاح',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mosque),
-            label: 'الإشتراكات',
+            icon: Icon(Icons.chat),
+            label: 'المحادثات',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -138,8 +148,6 @@ class _managersPage extends State<ManagersPage> {
           ),
         ],
       ),
-
-      
 
       body: Container(
         decoration: const BoxDecoration(
@@ -150,7 +158,8 @@ class _managersPage extends State<ManagersPage> {
         ),
         child: loading
             ? const Center(
-                child: CircularProgressIndicator(),//the loading circle when the page is being refreshed
+                child:
+                    CircularProgressIndicator(), //the loading circle when the page is being refreshed
               )
             : _prayer.isEmpty
                 ? RefreshIndicator(
@@ -158,11 +167,13 @@ class _managersPage extends State<ManagersPage> {
                     child: Stack(children: [
                       const Center(
                         child: Text(
-                          "لا يوجد مصلين مسجلين في هذا المسجد", //if array _prayers is empty we will print this msg
-                          style: TextStyle(fontFamily: 'Elmessiri')
-                        ),
+                            ".لا يوجد مصلين مسجلين في هذا المسجد", //if array _prayers is empty we will print this msg
+                            style: TextStyle(
+                                fontFamily: 'Elmessiri', color: Colors.grey)),
                       ),
-                      const SizedBox(height: 20,),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       ListView(), //else we will call the listView in order to handle the prayers list
                     ]),
                   )
@@ -172,15 +183,16 @@ class _managersPage extends State<ManagersPage> {
                         child: Stack(children: [
                           const Center(
                             child: Text(
-                              "لا يوجد مصلين مسجلين في هذا المسجد",//if array mosqueMembers is empty we will print this msg
-                              style: TextStyle(fontFamily: 'Elmessiri')
-                            ),
+                                "لا يوجد مصلين مسجلين في هذا المسجد", //if array mosqueMembers is empty we will print this msg
+                                style: TextStyle(fontFamily: 'Elmessiri')),
                           ),
-                          const SizedBox(height: 20,),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           ListView(), //else we will call the listView in order to handle the prayers list //there mosque contain prayers
                         ]),
                       )
-                    :RefreshIndicator(
+                    : RefreshIndicator(
                         onRefresh: () async => fetchData(),
                         child: ListView.builder(
                           itemCount: mosqueMembers.length,
@@ -215,5 +227,20 @@ class _managersPage extends State<ManagersPage> {
                       ),
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (_selectedIndex == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                NukiLockPage(mosqueId: mosqueId, id: widget.id)),
+      );
+    }
   }
 }
