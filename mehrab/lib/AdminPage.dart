@@ -20,7 +20,7 @@ class AdminPage extends StatelessWidget {
                   bottom: Radius.circular(20),
                 ),
               ),
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor:  Color.fromARGB(255, 38, 25, 152),
               automaticallyImplyLeading: false,
               title: Align(
                 alignment: Alignment.center,
@@ -60,7 +60,7 @@ class AdminPage extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             //minimumSize: const Size.fromHeight(50),
-                            primary: Color.fromARGB(255, 20, 5, 87),
+                            primary:  Color.fromARGB(255, 38, 25, 152),
                           ),
                           child: const Text(' إضافة مسجد',
                               style: TextStyle(
@@ -83,7 +83,7 @@ class AdminPage extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             //minimumSize: const Size.fromHeight(50),
-                            primary: Color.fromARGB(255, 20, 5, 87),
+                            primary:  Color.fromARGB(255, 38, 25, 152),
                           ),
                           child: const Text(' إنشاء حسابات المؤذن و الإمام',
                               style: TextStyle(
