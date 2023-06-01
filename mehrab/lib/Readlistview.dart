@@ -137,12 +137,6 @@ class _ReadlistviewState extends State<Readlistview> {
 
       if (response.docs.isNotEmpty) {
         allData = data = response.docs;
-
-        // for (var i in data) {
-
-        //   log(i.data().toString());
-
-        // }
       }
 
       setState(() {
@@ -152,8 +146,6 @@ class _ReadlistviewState extends State<Readlistview> {
       setState(() {
         loading = false;
       });
-
-      // Fluttertoast.showToast(msg: "حدث خطأ ما ");
     }
   }
 

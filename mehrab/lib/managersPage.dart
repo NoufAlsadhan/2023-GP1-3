@@ -108,7 +108,7 @@ class _managersPage extends State<ManagersPage> {
     List<Map<String, dynamic>> filteredList = [];
 
     for (var i in allData) {
-      if (("@" + i["اسم المستخدم"]).contains(val)) {
+      if (i["اسم المستخدم"].startsWith(val)) {
         filteredList.add(i);
       }
     }
@@ -248,8 +248,8 @@ class _managersPage extends State<ManagersPage> {
                                   child: Center(
                                     child: Text(
                                       searchFocus.hasFocus
-                                          ? "لا توجد نتائج"
-                                          : "لا يوجد مصلين مسجلين في هذا المسجد", //if array mosqueMembers is empty we will print this msg
+                                          ? ".لا توجد نتائج"
+                                          : ".لا توجد نتائج", //if array mosqueMembers is empty we will print this msg
 
                                       style: const TextStyle(
                                           fontFamily: 'Elmessiri',
@@ -293,8 +293,7 @@ class _managersPage extends State<ManagersPage> {
                                                 const EdgeInsets.symmetric(
                                                     horizontal: 10,
                                                     vertical: 0),
-                                            hintText:
-                                                "ابحث عن مسجد, جامع أو حي ",
+                                            hintText: "ابحث عن مصلّي",
                                             suffixIcon: const Icon(Icons.search,
                                                 color: Color.fromARGB(
                                                     255, 38, 25, 152)),

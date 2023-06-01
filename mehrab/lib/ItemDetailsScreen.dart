@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mehrab/Anlis.dart';
 import 'dart:math' as math;
 
 class ItemDetailsScreen extends StatelessWidget {
@@ -250,226 +251,251 @@ class ItemDetailsScreen extends StatelessWidget {
 
                                   return Directionality(
                                     textDirection: TextDirection.rtl,
-                                    child: ListView.builder(
-                                      itemCount: snapshot.data!.docs.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              width: 2,
-                                              color: Color.fromARGB(
-                                                  255, 213, 213, 213)),
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
-                                        margin: EdgeInsets.all(10),
-                                        height: 120,
-                                        width: 300,
-                                        child: Stack(
-                                          clipBehavior: Clip.none,
-                                          children: [
-                                            Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                            ),
-                                            Positioned(
-                                              left: -10,
-                                              top: -10,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Color.fromRGBO(
-                                                      212, 175, 55, 1),
-                                                ),
-                                                width: 40,
-                                                height: 40,
-                                                child: Icon(
-                                                  Icons.notifications,
-                                                  color: Colors.white,
-                                                  size: 30,
-                                                ),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: 2,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) =>
+                                                Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    width: 2,
+                                                    color: Color.fromARGB(
+                                                        255, 213, 213, 213)),
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255),
                                               ),
-                                            ),
-                                            Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.person_2_outlined,
-                                                      color: Color.fromRGBO(
-                                                          212, 175, 55, 1),
-                                                      size: 30,
+                                              margin: EdgeInsets.all(10),
+                                              height: 120,
+                                              width: 300,
+                                              child: Stack(
+                                                clipBehavior: Clip.none,
+                                                children: [
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                  ),
+                                                  Positioned(
+                                                    left: -10,
+                                                    top: -10,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Color.fromRGBO(
+                                                            212, 175, 55, 1),
+                                                      ),
+                                                      width: 40,
+                                                      height: 40,
+                                                      child: Icon(
+                                                        Icons.notifications,
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
                                                     ),
-
-                                                    SizedBox(
-                                                        width:
-                                                            5), // add a small space between the icon and text
-                                                    Container(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Row(
                                                         children: [
-                                                          Text(
-                                                            '${snapshot.data!.docs[index]['Writer_name']}',
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontFamily:
-                                                                  'Elmessiri',
-                                                              fontSize: 15,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      20,
-                                                                      5,
-                                                                      87),
+                                                          Icon(
+                                                            Icons
+                                                                .person_2_outlined,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    212,
+                                                                    175,
+                                                                    55,
+                                                                    1),
+                                                            size: 30,
+                                                          ),
+
+                                                          SizedBox(
+                                                              width:
+                                                                  5), // add a small space between the icon and text
+                                                          Container(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  '${snapshot.data!.docs[index]['Writer_name']}',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontFamily:
+                                                                        'Elmessiri',
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            20,
+                                                                            5,
+                                                                            87),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Center(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
                                                       Center(
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Center(
+                                                              child: Text(
+                                                                '${snapshot.data!.docs[index]['Title']}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Elmessiri',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 15,
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          20,
+                                                                          5,
+                                                                          87),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            /*Icon(
+                                  Icons.notifications_none_outlined,
+                                  color: Color.fromRGBO(212, 175, 55, 1),
+                                  size: 27,
+                                ),*/
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topCenter,
+                                                            child: Container(
+                                                              child: Text(
+                                                                '\n${snapshot.data!.docs[index]['Content']}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Elmessiri',
+                                                                  fontSize:
+                                                                      14, // reduce font size
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          20,
+                                                                          5,
+                                                                          87),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 10),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Container(
+                                                            child: Text(
+                                                              '\n\n تاريخ الإعلان: ${snapshot.data!.docs[index]['Date']} \u0647\u0640',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Elmessiri',
+                                                                fontSize: 12,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        20,
+                                                                        5,
+                                                                        87),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Anlis(post
+                                                                            .id)),
+                                                          );
+                                                        },
                                                         child: Text(
-                                                          '${snapshot.data!.docs[index]['Title']}',
+                                                          'عرض المزيد..',
                                                           style: TextStyle(
-                                                            fontFamily:
-                                                                'Elmessiri',
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 15,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    20,
-                                                                    5,
-                                                                    87),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      /*Icon(
-                            Icons.notifications_none_outlined,
-                            color: Color.fromRGBO(212, 175, 55, 1),
-                            size: 27,
-                          ),*/
-                                                    ],
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topCenter,
-                                                      child: Container(
-                                                        child: Text(
-                                                          '\n${snapshot.data!.docs[index]['Content']}',
-                                                          style: TextStyle(
                                                             fontFamily:
                                                                 'Elmessiri',
-                                                            fontSize:
-                                                                14, // reduce font size
+                                                            fontSize: 16,
                                                             color:
                                                                 Color.fromARGB(
                                                                     255,
-                                                                    20,
-                                                                    5,
-                                                                    87),
+                                                                    37,
+                                                                    171,
+                                                                    238),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Container(
-                                                      child: Text(
-                                                        '\n\n\n تاريخ الإعلان: ${snapshot.data!.docs[index]['Date']} \u0647\u0640',
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'Elmessiri',
-                                                          fontSize: 12,
-                                                          color: Color.fromARGB(
-                                                              255, 20, 5, 87),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    ],
                                                   ),
-                                                )
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   );
                                 },
                               ),
                             ),
+
+                            /*GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Anlis(post.id)),
+        );
+      },
+      child: Text(
+        '..عرض المزيد',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Elmessiri',
+          fontSize: 16,
+          color:Color.fromARGB(255, 37, 171, 238),
+        ),
+      ),
+    ),*/
                           ],
                         )
-
-/*StreamBuilder<QuerySnapshot>(
-                              stream: announcement,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text(
-                                    'خطأ في الاتصال بقاعدة البيانات',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.red,
-                                      fontFamily: 'Elmessiri',
-                                    ),
-                                  );
-                                }
-
-                                if (!snapshot.hasData) {
-                                  return Text(
-                                    'لا يوجد بيانات',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                      fontFamily: 'Elmessiri',
-                                    ),
-                                  );
-                                }
-
-                                List<DocumentSnapshot> docs =
-                                    snapshot.data.docs;
-
-                                if (docs.isEmpty) {
-                                  return Text(
-                                    'لا يوجد مستجدات حالية',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(
-                                          255, 166, 165, 167),
-                                      fontFamily: 'Elmessiri',
-                                    ),
-                                  );
-                                }
-                                  }
-)*/
                       ],
                     ),
                   ),
