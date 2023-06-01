@@ -695,7 +695,7 @@ var docRef = db.collection("Mosque").doc(text);
              _MuathenName.text=data!["Muathen name"];
              imageUrl.text=data?["Image"];
              _LocLink.text=data?["Location"]; 
-           dev.log (data.toString());
+           
           
         } 
 
