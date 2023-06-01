@@ -36,32 +36,29 @@ class _ReadlistviewState extends State<Readlistview> {
   List<bool> joinedStatus = [];
 
   void toggleJoin(
-      int index, List<QueryDocumentSnapshot<Map<String, dynamic>>> docs) async {
-    if (!myArray.contains(docs[index].id)) {
+      int index, List<QueryDocumentSnapshot<Map<String, dynamic>>> data) async {
+    if (!myArray.contains(data[index].id)) {
       //I joined(the button says leave)
+      setState(() {
+        myArray.add(data[index].id);
+      });
 
-      myArray.add(docs[index].id);
-
-      showAlertDialog('إنضمام', docs[index]['Name']);
+      showAlertDialog('إنضمام', data[index]['Name']);
 
       try {
         await FirebaseFirestore.instance
             .collection('prayer')
             .doc(widget.username)
             .update({
-          'joinedMosques': FieldValue.arrayUnion([docs[index].id])
+          'joinedMosques': FieldValue.arrayUnion([data[index].id])
         });
 
         await FirebaseFirestore.instance
             .collection('Mosque')
-            .doc(docs[index].id)
+            .doc(data[index].id)
             .update({
           'joinedPrayers': FieldValue.arrayUnion([widget.username])
         });
-
-        print('Item added to myArrayField successfully');
-
-        print('Item added to myArrayField successfully');
       } catch (e) {
         print('Error adding item to myArrayField: $e');
       }
@@ -69,24 +66,25 @@ class _ReadlistviewState extends State<Readlistview> {
       return;
     }
 
-    if (myArray.contains(docs[index].id)) {
-      showAlertDialog('مغادرة', docs[index]['Name']);
+    if (myArray.contains(data[index].id)) {
+      showAlertDialog('مغادرة', data[index]['Name']);
 
       //I joined(the button says leave)
-
-      myArray.remove(docs[index].id);
+      setState(() {
+        myArray.remove(data[index].id);
+      });
 
       try {
         await FirebaseFirestore.instance
             .collection('prayer')
             .doc(widget.username)
             .update({
-          'joinedMosques': FieldValue.arrayRemove([docs[index].id])
+          'joinedMosques': FieldValue.arrayRemove([data[index].id])
         });
 
         await FirebaseFirestore.instance
             .collection('Mosque')
-            .doc(docs[index].id)
+            .doc(data[index].id)
             .update({
           'joinedPrayers': FieldValue.arrayRemove([widget.username])
         });
@@ -121,7 +119,8 @@ class _ReadlistviewState extends State<Readlistview> {
     // i will fetch and store data locally in Memory
 
     try {
-      final response = await db.collection('Mosque').get();
+      final response =
+          await db.collection('Mosque').where('added', isEqualTo: true).get();
 
       FirebaseFirestore.instance
           .collection('prayer')

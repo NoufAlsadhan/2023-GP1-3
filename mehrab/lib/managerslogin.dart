@@ -236,13 +236,28 @@ class _managersLogin extends State<ManagersLogin> {
     var hpassword = utf8.encode(_password.text);
     var h = sha256.convert(hpassword).toString();
 
+    final mosqueManagerRef = FirebaseFirestore.instance
+        .collection('Mosque Manager')
+        .doc(_nationalId.text);
+
+    final ImamQuerySnapshot = await FirebaseFirestore.instance
+        .collection('Mosque')
+        .where('Imam', isEqualTo: mosqueManagerRef)
+        .get();
+
+    final MuathenQuerySnapshot = await FirebaseFirestore.instance
+        .collection('Mosque')
+        .where('Muathen', isEqualTo: mosqueManagerRef)
+        .get();
+
     await db
         .collection('Account')
         .where('رقم الهوية', isEqualTo: _nationalId.text)
         .where('كلمة المرور', isEqualTo: h)
         .get()
         .then((querySnapshot) async {
-      if (querySnapshot.docs.isNotEmpty) {
+      if (querySnapshot.docs.isNotEmpty &&
+          (MuathenQuerySnapshot.size > 0 || ImamQuerySnapshot.size > 0)) {
         final DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         found = false;
 

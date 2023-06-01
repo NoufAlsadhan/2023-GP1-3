@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:mehrab/prayerlogin.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mehrab/unauthorized.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sms/flutter_sms.dart';
@@ -72,7 +73,7 @@ class _createAccountsState extends State<createAccounts> {
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
               centerTitle: true,
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor: Color.fromARGB(255, 38, 25, 152),
               leading: Container(), // Remove the leading back button
               actions: [
                 IconButton(
@@ -91,7 +92,7 @@ class _createAccountsState extends State<createAccounts> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/background2.jpg"),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                 ),
               ),
               child: SingleChildScrollView(
@@ -309,7 +310,7 @@ class _createAccountsState extends State<createAccounts> {
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: const Size.fromHeight(50),
-                                  primary: Color.fromARGB(255, 20, 5, 87),
+                                  primary: Color.fromARGB(255, 38, 25, 152),
                                 ),
                                 child: const Text('إنشاء',
                                     style: TextStyle(fontFamily: 'Elmessiri')),
@@ -710,6 +711,7 @@ class _createAccountsState extends State<createAccounts> {
           DuplicateNum = true;
           DuplicateNumError =
               'تم تعيين وانشاء حسابات الإمام والمؤذن لهذا المسجد مسبقًا';
+          showAlertDialog3();
 
           _IidController.clear();
           _IphoneController.clear();
@@ -757,5 +759,46 @@ class _createAccountsState extends State<createAccounts> {
         }
       }
     });
+  }
+
+  showAlertDialog3() {
+    // set up the buttons
+
+    Widget cancelButton = TextButton(
+      child: Text("إلغاء",
+          style: TextStyle(fontFamily: 'Elmessiri', color: Colors.red)),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("تعطيل", style: TextStyle(fontFamily: 'Elmessiri')),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => unauthorized(
+                      id: _mosquenum.text,
+                    )));
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      content: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Text(
+            "تم تعيين وانشاء حسابات الإمام والمؤذن لهذا المسجد مسبقًا, هل تريد تعطيل واستبدال الحسابات؟",
+            style: TextStyle(
+              fontFamily: 'Elmessiri',
+            )),
+      ),
+      actions: [cancelButton, continueButton],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
