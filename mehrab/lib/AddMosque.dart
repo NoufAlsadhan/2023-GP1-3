@@ -18,15 +18,14 @@ final TextEditingController _Mosquenum = TextEditingController();
 final TextEditingController _MosqueNameController = TextEditingController();
 final TextEditingController _District = TextEditingController();
 final TextEditingController _LocLink = TextEditingController();
-final TextEditingController imageUrl= TextEditingController();
+final TextEditingController imageUrl = TextEditingController();
 final TextEditingController _ImamName = TextEditingController();
 final TextEditingController _MuathenName = TextEditingController();
 final TextEditingController _MosqueImage = TextEditingController();
 var db = FirebaseFirestore.instance;
 
-List<String> itemsList = ['خالد', 'محمد', 'عاصم','صالح','عبدالله'];
+List<String> itemsList = ['خالد', 'محمد', 'عاصم', 'صالح', 'عبدالله'];
 String? selectedItem = 'خالد';
-
 
 class AddMosque extends StatefulWidget {
   _AddMosqueState createState() => _AddMosqueState();
@@ -41,18 +40,18 @@ class _AddMosqueState extends State<AddMosque> {
         FirebaseFirestore.instance.collection('Mosque');
     late Stream<QuerySnapshot> _stream;
     _stream = collectionRef.snapshots();
-    _Mosquenum.text = ''; 
-    _MosqueNameController.text = ''; 
-    _District.text = ''; 
-    _LocLink.text = ''; 
-    _ImamName.text = ''; 
-    _MuathenName.text = ''; 
-    _MosqueImage.text = ''; 
-    imageUrl.text='';
+    _Mosquenum.text = '';
+    _MosqueNameController.text = '';
+    _District.text = '';
+    _LocLink.text = '';
+    _ImamName.text = '';
+    _MuathenName.text = '';
+    _MosqueImage.text = '';
+    imageUrl.text = '';
   }
 
   bool _visible = false;
-  var _isAdded ;
+  var _isAdded;
   bool _visible2 = false;
   var numberErrorMessageI = '';
   var ImageErrorMessage = '';
@@ -98,7 +97,6 @@ class _AddMosqueState extends State<AddMosque> {
                 ),
               ],
             ),
-
             body: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -174,9 +172,9 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ), //Mosque name container
 
-                       // const SizedBox(height: 20,),
+                        // const SizedBox(height: 20,),
 
-                       Container(
+                        Container(
                           padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -202,9 +200,7 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ),
 
-                        
-
-                       /* Container(
+                        /* Container(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         decoration:  BoxDecoration(
                                    borderRadius: BorderRadius.circular(90.0),
@@ -288,7 +284,7 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ), //Muathen name controller
 
-                       /* const SizedBox(
+                        /* const SizedBox(
                           height: 20,
                         ), */
 
@@ -318,7 +314,6 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ), // Image container
 
-                        
                         /*Container(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
@@ -330,7 +325,7 @@ class _AddMosqueState extends State<AddMosque> {
                             ),
                           ),
                         ),*/
-                      /*  Container(
+                        /*  Container(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -379,8 +374,8 @@ class _AddMosqueState extends State<AddMosque> {
                         Visibility(
                             visible: _visible2,
                             child: Text('تم إدراج صورة المسجد بنجاح',
-                                style: TextStyle(color: Colors.green))), 
-                            //feedback after adding image successfully
+                                style: TextStyle(color: Colors.green))),
+                        //feedback after adding image successfully
 
                         Container(
                           padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
@@ -406,7 +401,7 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ), //URL container 
+                        ), //URL container
 
                         const SizedBox(
                           height: 20,
@@ -415,7 +410,7 @@ class _AddMosqueState extends State<AddMosque> {
                             visible: _visible,
                             child: Text(' جميع الحقول مطلوبة ',
                                 style: TextStyle(color: Colors.red))),
-                              //feedback of filling all fields
+                        //feedback of filling all fields
 
                         Container(
                             height: 80,
@@ -487,7 +482,7 @@ class _AddMosqueState extends State<AddMosque> {
                                     showAlertDialog(context, MosqueData);
                                   }
                                   setState(() {});
-                                })),  //end of add button
+                                })), //end of add button
                       ],
                     ),
                   ),
@@ -504,13 +499,13 @@ class _AddMosqueState extends State<AddMosque> {
     setState(() {
       _visible = false;
     });
-  }//check non empty fields
+  } //check non empty fields
 
   void _toggle2() {
     setState(() {
       _visible2 = true;
     });
-  } //check the url 
+  } //check the url
 
   validateUrl(String text) async {
     var v = true;
@@ -527,7 +522,7 @@ class _AddMosqueState extends State<AddMosque> {
         validUrl = true;
       });
     }
-  } //End validate URL 
+  } //End validate URL
 
   validateMosqueName(String text) async {
     var v = true;
@@ -545,7 +540,7 @@ class _AddMosqueState extends State<AddMosque> {
         validMname = true;
       });
     }
-  } //End validate Mosque Name 
+  } //End validate Mosque Name
 
   validateNum(String text) async {
     var v = true;
@@ -640,84 +635,68 @@ class _AddMosqueState extends State<AddMosque> {
     );
   } //confirmation msg after validating all input and clicking add button
 
-   void Add() {
+  void Add() {
     print("lama");
     db
-  .collection('Mosque')
-  .doc(_Mosquenum.text)
-  .update({
-    'added': true,
-  })
-  .then((value) => print('Document updated successfully!'))
-  .catchError((error) => print('Error updating document: $error'));
+        .collection('Mosque')
+        .doc(_Mosquenum.text)
+        .update({
+          'added': true,
+        })
+        .then((value) => print('Document updated successfully!'))
+        .catchError((error) => print('Error updating document: $error'));
   }
 
   Future<void> _isDuplicate(String text) async {
     //Validating
-var docRef = db.collection("Mosque").doc(text);
-        var docSnapshot = await docRef.get();
+    var docRef = db.collection("Mosque").doc(text);
+    var docSnapshot = await docRef.get();
 
-        if (docSnapshot.exists) {
-          var data = docSnapshot.data();
+    if (docSnapshot.exists) {
+      var data = docSnapshot.data();
 
-          if(data!["added"]){
-            setState(() {
-              validNum = false;
-            numberErrorMessageI =
-                'هذا المسجد مضاف مسبقًا';
-                
-        _MosqueNameController.clear();
-        _District.clear();
-        _LocLink.clear();
-        _ImamName.clear();
-        _MuathenName.clear();
-        imageUrl.clear();
-            });
+      if (data!["added"]) {
+        setState(() {
+          validNum = false;
+          numberErrorMessageI = 'هذا المسجد مضاف مسبقًا';
 
-        }
-
-        
-  
-
-     else {
-
-          //هنا الكود حق الاوتوفل
-
-          
+          _MosqueNameController.clear();
+          _District.clear();
+          _LocLink.clear();
+          _ImamName.clear();
+          _MuathenName.clear();
+          imageUrl.clear();
+        });
+      } else {
+        //هنا الكود حق الاوتوفل
+        setState(() {
+          validNum = true;
+        });
         var docRef = db.collection("Mosque").doc(text);
         var docSnapshot = await docRef.get();
 
         if (docSnapshot.exists) {
           var data = docSnapshot.data();
-          _MosqueNameController.text=data!["Name"];
-           _District.text=data!["District"];
-            _ImamName.text=data!["Imam name"];
-             _MuathenName.text=data!["Muathen name"];
-             imageUrl.text=data?["Image"];
-             _LocLink.text=data?["Location"]; 
-           
-          
-        } 
-
-
+          _MosqueNameController.text = data!["Name"];
+          _District.text = data!["District"];
+          _ImamName.text = data!["Imam name"];
+          _MuathenName.text = data!["Muathen name"];
+          imageUrl.text = data?["Image"];
+          _LocLink.text = data?["Location"];
         }
+      }
       //final lockDoc = querySnapshot.docs.first;
-      
-    }
-     else {
-        setState(() {
-          validNum = false;
-          numberErrorMessageI =
-                'هذا المسجد  ليس موجود في قاعدة البيانات';
-        _Mosquenum.clear();
+    } else {
+      setState(() {
+        validNum = false;
+        numberErrorMessageI = 'هذا المسجد  ليس موجود في قاعدة البيانات';
         _MosqueNameController.clear();
         _District.clear();
         _LocLink.clear();
         _ImamName.clear();
         _MuathenName.clear();
         imageUrl.clear();
-        });
-      }
+      });
     }
-  
+  }
 } //adding the mosque data to Mehrab database
