@@ -53,7 +53,7 @@ class HomePage extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      primary: Color.fromARGB(255, 20, 5, 87),
+                      primary: Color.fromARGB(255, 26, 7, 115),
                     ),
                     child: const Text('مصلّـي',
                         style: TextStyle(fontFamily: 'Elmessiri')),
@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      primary: Color.fromARGB(255, 20, 5, 87),
+                      primary: Color.fromARGB(255, 26, 7, 115),
                     ),
                     child: const Text('إمام/مـؤذن',
                         style: TextStyle(fontFamily: 'Elmessiri')),

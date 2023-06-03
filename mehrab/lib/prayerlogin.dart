@@ -95,7 +95,7 @@ class _prayerlogin extends State<prayerlogin> {
 
               centerTitle: true,
 
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor: Color.fromARGB(255, 38, 25, 152),
 
               leading: Container(), // Remove the leading back button
 
@@ -199,7 +199,7 @@ class _prayerlogin extends State<prayerlogin> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(50),
-                            primary: Color.fromARGB(255, 20, 5, 87),
+                            primary: Color.fromARGB(255, 38, 25, 152),
                           ),
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),

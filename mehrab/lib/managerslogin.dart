@@ -57,7 +57,7 @@ class _managersLogin extends State<ManagersLogin> {
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
               centerTitle: true,
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor: Color.fromARGB(255, 38, 25, 152),
               leading: Container(), // Remove the leading back button
               actions: [
                 IconButton(
@@ -160,7 +160,7 @@ class _managersLogin extends State<ManagersLogin> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(50),
-                            primary: Color.fromARGB(255, 20, 5, 87),
+                            primary: Color.fromARGB(255, 38, 25, 152),
                           ),
                           child: const Text('تسجيل الدخول',
                               style: TextStyle(fontFamily: 'Elmessiri')),
