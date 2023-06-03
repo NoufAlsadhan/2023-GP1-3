@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mehrab/AdminLogin.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:mehrab/AddMosque.dart';
 import 'dart:async';
-import 'dart:math';
+//import 'dart:math';
+import 'dart:developer' as dev;
 import 'dart:math' as math;
 
 final _formKey = GlobalKey<FormState>();
@@ -16,11 +18,14 @@ final TextEditingController _Mosquenum = TextEditingController();
 final TextEditingController _MosqueNameController = TextEditingController();
 final TextEditingController _District = TextEditingController();
 final TextEditingController _LocLink = TextEditingController();
+final TextEditingController imageUrl= TextEditingController();
 final TextEditingController _ImamName = TextEditingController();
 final TextEditingController _MuathenName = TextEditingController();
 final TextEditingController _MosqueImage = TextEditingController();
 var db = FirebaseFirestore.instance;
-String imageUrl = '';
+
+List<String> itemsList = ['خالد', 'محمد', 'عاصم','صالح','عبدالله'];
+String? selectedItem = 'خالد';
 
 
 class AddMosque extends StatefulWidget {
@@ -43,9 +48,11 @@ class _AddMosqueState extends State<AddMosque> {
     _ImamName.text = ''; 
     _MuathenName.text = ''; 
     _MosqueImage.text = ''; 
+    imageUrl.text='';
   }
 
   bool _visible = false;
+  var _isAdded ;
   bool _visible2 = false;
   var numberErrorMessageI = '';
   var ImageErrorMessage = '';
@@ -76,7 +83,7 @@ class _AddMosqueState extends State<AddMosque> {
                 style: TextStyle(fontFamily: 'Elmessiri'),
               ),
               centerTitle: true,
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor: Color.fromARGB(255, 38, 25, 152),
               leading: Container(), // Remove the leading back button
               actions: [
                 IconButton(
@@ -117,21 +124,21 @@ class _AddMosqueState extends State<AddMosque> {
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
                               controller: _Mosquenum,
-                              onFieldSubmitted: validateNum,
+                              onFieldSubmitted: _isDuplicate,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 errorText: validNum == false
                                     ? numberErrorMessageI
                                     : null,
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: ' *رقم المسجد',
+                                labelText: '   *رقم المسجد',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -142,25 +149,22 @@ class _AddMosqueState extends State<AddMosque> {
                         ), //Mosque number container
 
                         Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: false,
                               controller: _MosqueNameController,
-                              onFieldSubmitted: validateMosqueName,
                               decoration: InputDecoration(
-                                errorText: validMname == false
-                                    ? MosqueNameErrorMessage
-                                    : null,
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: ' *اسم المسجد',
+                                labelText: '   اسم المسجد',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -170,22 +174,25 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ), //Mosque name container
 
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                       // const SizedBox(height: 20,),
+
+                       Container(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: false,
                               controller: _District,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: '  *الحي',
+                                labelText: '   الحي ',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -193,24 +200,59 @@ class _AddMosqueState extends State<AddMosque> {
                               ),
                             ),
                           ),
-                        ), //District container
+                        ),
+
+                        
+
+                       /* Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        decoration:  BoxDecoration(
+                                   borderRadius: BorderRadius.circular(90.0),
+                                   //border: Border.all(color:Color.fromARGB(255, 20, 5, 87), width: 1),
+                                ), 
+                       // width: 370,
+                        //height: 60, 
+                      //padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration( 
+                            labelText: 'اختر  الحي',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 20, 5, 87),
+                            ),
+                          ),
+                          iconSize: 25,
+                          icon: Icon(Icons.arrow_drop_down_circle, color:  Color.fromARGB(255, 38, 25, 152),),
+                              borderRadius: BorderRadius.circular(20), // هذا الراديس حق الخيارات
+                                value: selectedItem,
+                                items: itemsList
+                                .map((item) => DropdownMenuItem(
+                                  value: item,
+                                  child: Text(item, style: TextStyle(fontSize: 15))))
+                                  .toList(),
+                                  onChanged: (item) => setState(() => selectedItem = item)
+                                  ),
+                                  ),
+                                  ), */
 
                         Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: false,
                               controller: _ImamName,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: '  *اسم الإمام',
+                                labelText: '   اسم الإمام',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -221,21 +263,22 @@ class _AddMosqueState extends State<AddMosque> {
                         ), //Imam name container
 
                         Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: false,
                               controller: _MuathenName,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: '  *اسم المؤذن',
+                                labelText: '   اسم المؤذن',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -245,10 +288,38 @@ class _AddMosqueState extends State<AddMosque> {
                           ),
                         ), //Muathen name controller
 
-                        const SizedBox(
+                       /* const SizedBox(
                           height: 20,
-                        ),
+                        ), */
+
                         Container(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: imageUrl,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 20),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 20, 5, 87),
+                                      width: 1),
+                                ),
+                                labelText: '   رابط صورة المسجد ',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontFamily: "Elmessiri",
+                                    fontSize: 12),
+                              ),
+                            ),
+                          ),
+                        ), // Image container
+
+                        
+                        /*Container(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -258,8 +329,8 @@ class _AddMosqueState extends State<AddMosque> {
                                   fontFamily: 'Elmessiri', fontSize: 12),
                             ),
                           ),
-                        ),
-                        Container(
+                        ),*/
+                      /*  Container(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
@@ -303,7 +374,7 @@ class _AddMosqueState extends State<AddMosque> {
                                   color: Color.fromARGB(255, 20, 5, 87),
                                 )),
                           ),
-                        ), //adding mosque image container
+                        ),*/ //adding mosque image container
 
                         Visibility(
                             visible: _visible2,
@@ -312,24 +383,22 @@ class _AddMosqueState extends State<AddMosque> {
                             //feedback after adding image successfully
 
                         Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: false,
                               controller: _LocLink,
-                              onFieldSubmitted: validateUrl,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    EdgeInsets.symmetric(vertical: 15),
-                                errorText:
-                                    validUrl == false ? UrlErrorMessage : null,
+                                    EdgeInsets.symmetric(vertical: 20),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 20, 5, 87),
                                       width: 1),
                                 ),
-                                labelText: '  *رابط الموقع',
+                                labelText: '   رابط الموقع ',
                                 labelStyle: TextStyle(
                                     color: Colors.grey[600],
                                     fontFamily: "Elmessiri",
@@ -344,7 +413,7 @@ class _AddMosqueState extends State<AddMosque> {
                         ),
                         Visibility(
                             visible: _visible,
-                            child: Text(' جميع الحقول مطلوبة *',
+                            child: Text(' جميع الحقول مطلوبة ',
                                 style: TextStyle(color: Colors.red))),
                               //feedback of filling all fields
 
@@ -354,7 +423,7 @@ class _AddMosqueState extends State<AddMosque> {
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: const Size.fromHeight(50),
-                                  primary: Color.fromARGB(255, 20, 5, 87),
+                                  primary: Color.fromARGB(255, 38, 25, 152),
                                 ),
                                 child: const Text('إضافة المسجد',
                                     style: TextStyle(fontFamily: 'Elmessiri')),
@@ -367,7 +436,7 @@ class _AddMosqueState extends State<AddMosque> {
                                       _LocLink.text.isEmpty ||
                                       _ImamName.text.isEmpty ||
                                       _MuathenName.text.isEmpty ||
-                                      imageUrl.isEmpty ||
+                                      imageUrl.text.isEmpty ||
                                       _Mosquenum.text == '' ||
                                       _MosqueNameController.text == '' ||
                                       _District.text == '' ||
@@ -385,7 +454,7 @@ class _AddMosqueState extends State<AddMosque> {
                                       _LocLink.text.isNotEmpty &&
                                       _ImamName.text.isNotEmpty &&
                                       _MuathenName.text.isNotEmpty &&
-                                      imageUrl.isNotEmpty &&
+                                      imageUrl.text.isNotEmpty &&
                                       _Mosquenum.text != '' &&
                                       _MosqueNameController.text != '' &&
                                       _District.text != '' &&
@@ -458,7 +527,7 @@ class _AddMosqueState extends State<AddMosque> {
         validUrl = true;
       });
     }
-  } //End validate URL
+  } //End validate URL 
 
   validateMosqueName(String text) async {
     var v = true;
@@ -476,7 +545,7 @@ class _AddMosqueState extends State<AddMosque> {
         validMname = true;
       });
     }
-  } //End validate Mosque Name
+  } //End validate Mosque Name 
 
   validateNum(String text) async {
     var v = true;
@@ -528,16 +597,19 @@ class _AddMosqueState extends State<AddMosque> {
     Widget continueButton = TextButton(
       child: Text("إضافة", style: TextStyle(fontFamily: 'Elmessiri')),
       onPressed: () {
-        Add(MosqueData);
+        //Add(MosqueData);
         Navigator.pop(context);
 
-        _Mosquenum.clear();
+        //_Mosquenum.clear();
         _MosqueNameController.clear();
         _District.clear();
         _LocLink.clear();
         _ImamName.clear();
         _MuathenName.clear();
-        imageUrl = '';
+        imageUrl.clear();
+
+        Add();
+        _Mosquenum.clear();
       },
     );
     // set up the AlertDialog
@@ -568,13 +640,84 @@ class _AddMosqueState extends State<AddMosque> {
     );
   } //confirmation msg after validating all input and clicking add button
 
-  Add(
-    Map<String, dynamic> MosqueData,
-  ) {
+   void Add() {
+    print("lama");
     db
-        .collection('Mosque')
-        .doc(_Mosquenum.text)
-        .set(MosqueData)
-        .onError((e, _) => print("Error writing document: $e"));
+  .collection('Mosque')
+  .doc(_Mosquenum.text)
+  .update({
+    'added': true,
+  })
+  .then((value) => print('Document updated successfully!'))
+  .catchError((error) => print('Error updating document: $error'));
   }
+
+  Future<void> _isDuplicate(String text) async {
+    //Validating
+var docRef = db.collection("Mosque").doc(text);
+        var docSnapshot = await docRef.get();
+
+        if (docSnapshot.exists) {
+          var data = docSnapshot.data();
+
+          if(data!["added"]){
+            setState(() {
+              validNum = false;
+            numberErrorMessageI =
+                'هذا المسجد مضاف مسبقًا';
+                
+        _MosqueNameController.clear();
+        _District.clear();
+        _LocLink.clear();
+        _ImamName.clear();
+        _MuathenName.clear();
+        imageUrl.clear();
+            });
+
+        }
+
+        
+  
+
+     else {
+
+          //هنا الكود حق الاوتوفل
+
+          
+        var docRef = db.collection("Mosque").doc(text);
+        var docSnapshot = await docRef.get();
+
+        if (docSnapshot.exists) {
+          var data = docSnapshot.data();
+          _MosqueNameController.text=data!["Name"];
+           _District.text=data!["District"];
+            _ImamName.text=data!["Imam name"];
+             _MuathenName.text=data!["Muathen name"];
+             imageUrl.text=data?["Image"];
+             _LocLink.text=data?["Location"]; 
+           
+          
+        } 
+
+
+        }
+      //final lockDoc = querySnapshot.docs.first;
+      
+    }
+     else {
+        setState(() {
+          validNum = false;
+          numberErrorMessageI =
+                'هذا المسجد  ليس موجود في قاعدة البيانات';
+        _Mosquenum.clear();
+        _MosqueNameController.clear();
+        _District.clear();
+        _LocLink.clear();
+        _ImamName.clear();
+        _MuathenName.clear();
+        imageUrl.clear();
+        });
+      }
+    }
+  
 } //adding the mosque data to Mehrab database
