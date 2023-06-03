@@ -3,16 +3,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mehrab/managerslogin.dart';
 import 'firebase_options.dart';
 import 'package:mehrab/lock.dart';
 
 class ManagersPage extends StatefulWidget {
   final String mosqueId;
   final String id;
+
   const ManagersPage(
       {super.key,
       required this.mosqueId,
-      required this.id //received from managers login page to know what exact mosque to fetch its data
+      required this.id, //received from managers login page to know what exact mosque to fetch its data
       });
 
   @override
@@ -21,15 +23,16 @@ class ManagersPage extends StatefulWidget {
 
 class _managersPage extends State<ManagersPage> {
   late String mosqueId = widget.mosqueId; //late to be initialized later
+  late String mosqueName ='';
   final db = FirebaseFirestore.instance;
   int _selectedIndex = 3;
   final searchController = TextEditingController();
+  
 
   final searchFocus = FocusNode();
 
   List<String> _prayer = []; //array to store prayers usernames
-  List<Map<String, dynamic>> mosqueMembers =
-      []; //declared like this because it carries different data types
+  List<Map<String, dynamic>> mosqueMembers =[]; //declared like this because it carries different data types
   bool loading = false;
   List<Map<String, dynamic>> allData = [];
 
@@ -44,6 +47,7 @@ class _managersPage extends State<ManagersPage> {
         final data = response.data() as Map<String, dynamic>;
 
         _prayer = data['joinedPrayers'].cast<String>();
+        mosqueName = data['Name'];// to set the title for the page 
       }
       setState(() {
         loading = false;
@@ -80,8 +84,7 @@ class _managersPage extends State<ManagersPage> {
         debugPrint('error: $error');
       }
     }
-    allData =
-        mosqueMembers; // for loop that brings all prayers data joined that mosque
+    allData = mosqueMembers; // for loop that brings all prayers data joined that mosque
   } //end fetch each prayer data
 
   @override
@@ -128,12 +131,12 @@ class _managersPage extends State<ManagersPage> {
             ),
           ),
           centerTitle: true,
-          title: const Align(
-            child: Text(
-              "قائمة المصلين المنضمين إلى مسجدك",
+          title: Text (
+              //widget.mosqueName,
+              mosqueName,
               style: TextStyle(fontFamily: 'Elmessiri'),
             ),
-          ),
+          
           automaticallyImplyLeading: false, //backbutton
           backgroundColor: Color.fromARGB(255, 38, 25, 152),
         ),
@@ -153,7 +156,7 @@ class _managersPage extends State<ManagersPage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.key),
-              label: 'المفتاح',
+              label: 'المفتاح'
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.chat),
@@ -173,6 +176,7 @@ class _managersPage extends State<ManagersPage> {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("images/background2.jpg"),
+                
                 fit: BoxFit.cover,
               ),
             ),
@@ -305,6 +309,30 @@ class _managersPage extends State<ManagersPage> {
                                     ),
                                   ),
                                 ),
+
+                              
+                                Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    width: 0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl, // set the text direction to right-to-left
+                                  child: Text(
+                                    'عدد المنضمين   : ' + mosqueMembers.length.toString(),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Elmessiri',
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                                
                                 Expanded(
                                   child: ListView.builder(
                                     itemCount: mosqueMembers.length,
@@ -327,17 +355,18 @@ class _managersPage extends State<ManagersPage> {
                                                   borderRadius:
                                                       BorderRadius.circular(50),
                                                   child: Image.asset(
-                                                      "images/person.png")
+                                                      "images/person.png", width: 50, height: 50,)
 
                                                   // child: Image.asset("images/person.png"),
 
                                                   ),
                                               title: Text(mosqueMembers[index]
-                                                  ["الاسم"]),
+                                                  ["الاسم"],style: TextStyle(fontFamily: 'Elmessiri'),),
                                               subtitle: Text(
                                                   mosqueMembers[index]
                                                           ["اسم المستخدم"] +
-                                                      "@"),
+                                                      "@",
+                                                      style: TextStyle(fontFamily: 'Elmessiri'),),
                                             ),
                                           ),
                                         ),
