@@ -52,7 +52,7 @@ class _newPassword extends State<newPassword> {
                   style: TextStyle(fontFamily: 'Elmessiri'),
                 ),
               ),
-              backgroundColor: Color.fromARGB(255, 20, 5, 87),
+              backgroundColor: Color.fromARGB(255, 38, 25, 152),
             ),
             body: Container(
               decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class _newPassword extends State<newPassword> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(50),
-                            primary: Color.fromARGB(255, 20, 5, 87),
+                            primary: Color.fromARGB(255, 38, 25, 152),
                           ),
                           child: const Text('تغيير كلمة المرور',
                               style: TextStyle(fontFamily: 'Elmessiri')),
