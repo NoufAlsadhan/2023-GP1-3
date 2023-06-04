@@ -32,7 +32,7 @@ class _ReadlistviewState extends State<Readlistview> {
   bool loading = false;
 
   bool _isClicked = false;
-
+//
   List<bool> joinedStatus = [];
 
   void toggleJoin(
