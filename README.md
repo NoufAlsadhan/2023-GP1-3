@@ -20,6 +20,8 @@ adopted and special smart locks will be used.
 
 3-The database used is a Nosql firestore database.
 
+4- Mehrab application uses Nuki API to control the smart lock.
+
 # To run Mehrab application you need to:
 1-Download Visual studio code.
 
@@ -30,11 +32,14 @@ adopted and special smart locks will be used.
 4-An Internet connection.
 
 # To run the code:
-1-Import all codes in the files in Visual studio code.
+1-Import all codes in the files in Visual studio code(or clone the repository).
 
 2-Choose the device(to run the emulator).
 
 3-Run the code.
+
+# Contact information
+for any questions contact us at mehrab.ksu@gmail.com
 
 
 
