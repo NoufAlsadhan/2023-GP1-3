@@ -20,7 +20,9 @@ adopted and special smart locks will be used.
 
 3-The database used is a Nosql firestore database.
 
-4- Mehrab application uses Nuki API to control the smart lock.
+4- Mehrab application uses Nuki 3.0 pro as an IoT smart lock.
+
+5- Mehrab application uses Nuki API to control the smart lock.
 
 # To run Mehrab application you need to:
 1-Download Visual studio code.
