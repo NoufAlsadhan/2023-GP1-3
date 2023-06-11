@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:collection/collection.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -35,28 +36,25 @@ class _ReadlistviewState extends State<Readlistview> {
 //
   List<bool> joinedStatus = [];
 
-  void toggleJoin(
-      int index, List<QueryDocumentSnapshot<Map<String, dynamic>>> data) async {
-    if (!myArray.contains(data[index].id)) {
+  void toggleJoin(QueryDocumentSnapshot<Map<String, dynamic>> document) async {
+    final id = document.id;
+    if (!myArray.contains(id)) {
       //I joined(the button says leave)
       setState(() {
-        myArray.add(data[index].id);
+        myArray.add(id);
       });
 
-      showAlertDialog('إنضمام', data[index]['Name']);
+      showAlertDialog('إنضمام', document['Name']);
 
       try {
         await FirebaseFirestore.instance
             .collection('prayer')
             .doc(widget.username)
             .update({
-          'joinedMosques': FieldValue.arrayUnion([data[index].id])
+          'joinedMosques': FieldValue.arrayUnion([id])
         });
 
-        await FirebaseFirestore.instance
-            .collection('Mosque')
-            .doc(data[index].id)
-            .update({
+        await FirebaseFirestore.instance.collection('Mosque').doc(id).update({
           'joinedPrayers': FieldValue.arrayUnion([widget.username])
         });
       } catch (e) {
@@ -66,12 +64,12 @@ class _ReadlistviewState extends State<Readlistview> {
       return;
     }
 
-    if (myArray.contains(data[index].id)) {
-      showAlertDialog('مغادرة', data[index]['Name']);
+    if (myArray.contains(id)) {
+      showAlertDialog('مغادرة', document['Name']);
 
       //I joined(the button says leave)
       setState(() {
-        myArray.remove(data[index].id);
+        myArray.remove(id);
       });
 
       try {
@@ -79,13 +77,10 @@ class _ReadlistviewState extends State<Readlistview> {
             .collection('prayer')
             .doc(widget.username)
             .update({
-          'joinedMosques': FieldValue.arrayRemove([data[index].id])
+          'joinedMosques': FieldValue.arrayRemove([id])
         });
 
-        await FirebaseFirestore.instance
-            .collection('Mosque')
-            .doc(data[index].id)
-            .update({
+        await FirebaseFirestore.instance.collection('Mosque').doc(id).update({
           'joinedPrayers': FieldValue.arrayRemove([widget.username])
         });
 
@@ -183,6 +178,47 @@ class _ReadlistviewState extends State<Readlistview> {
 
   @override
   Widget build(BuildContext context) {
+    // Create a map to group the elements by district
+    // Create a map to group the elements by district
+    final Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+        groupedData = groupBy(data, (element) => element['District']);
+
+// Create a new list that contains the elements grouped by district
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> sortedData = [];
+
+    groupedData.forEach((key, value) {
+      // Add the documents for this district to the sortedData list
+      sortedData.addAll(value);
+    });
+
+    /*List<List<dynamic>> groupByDistrict(List<dynamic> data) {
+      final Map<String, List<dynamic>> groupedData = {};
+
+      for (final element in data) {
+        final district = element['District'];
+        if (!groupedData.containsKey(district)) {
+          groupedData[district] = [];
+        }
+        if (groupedData != null && groupedData[district] != null) {
+          groupedData[district]?.add(element);
+        }
+      }
+
+      return groupedData.values.toList();
+    }*/
+    /* void toggleJoin(int index, List<dynamic> data) {
+      final element = data[index];
+      final id = element['id'];
+      if (myArray == null) {
+        myArray = <int>[];
+      }
+      if (myArray.contains(id)) {
+        myArray.remove(id);
+      } else {
+        myArray.add(id);
+      }
+      setState(() {});
+    }*/
     return Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
@@ -286,91 +322,78 @@ class _ReadlistviewState extends State<Readlistview> {
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(top: 1.0),
-                        itemCount: data.length,
+                        itemCount: sortedData.length,
                         itemBuilder: (context, index) {
-                          //list tile is the list item which contain image , mosque name and district name retrived from the DB
+                          final item = sortedData[index];
+                          //print(item.id);
 
-                          return data.isEmpty
-                              ? Center(
+                          if (item is String) {
+                            // Return an empty widget if the item is a string (district name)
+                            return SizedBox.shrink();
+                          } else {
+                            // Build a list item for the element
+                            return Card(
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                    width: 1,
+                                    color: Color.fromARGB(255, 213, 213, 213),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                onTap: () {
+                                  navigateToDetail(item);
+                                },
+                                leading: ElevatedButton(
+                                  onPressed: () {
+                                    toggleJoin(item);
+                                  },
                                   child: Text(
-                                    'لا يوجد معلومات',
-                                    style: TextStyle(
+                                    myArray.contains(item.id)
+                                        ? 'مغادرة'
+                                        : 'إنضمام',
+                                    style: const TextStyle(
                                       fontFamily: 'Elmessiri',
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                                      fontSize: 10,
                                     ),
                                   ),
-                                )
-                              : Card(
-                                  child: ListTile(
-                                    shape: RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                          width: 1,
-                                          color: Color.fromARGB(
-                                              255, 213, 213, 213)),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-
-                                    //To naviagte to itemdetail UI
-
-                                    onTap: () {
-                                      navigateToDetail(data[index]);
-                                    },
-
-                                    leading: ElevatedButton(
-                                      onPressed: () {
-                                        toggleJoin(index, data);
-                                      },
-                                      child: Text(
-                                        myArray.contains(data[index].id)
-                                            ? 'مغادرة'
-                                            : 'إنضمام',
-                                        style: TextStyle(
-                                            fontFamily: 'Elmessiri',
-                                            fontSize: 10),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        primary: myArray
-                                                .contains(data[index].id)
-                                            ? Color.fromARGB(255, 38, 25,
-                                                152) // set the button color to red if the text is 'مغادرة'
-
-                                            : Color.fromRGBO(212, 175, 55, 1),
-                                        minimumSize: Size(30, 30),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16),
-                                      ),
-                                    ),
-
-                                    trailing: SizedBox(
-                                      width: 80,
-                                      height: 80,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(18),
-                                        child: Image.network(
-                                          data[index][
-                                              'Image'], //Retriveing from the DB
-
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-
-                                    title: Text(
-                                      data[index]['Name'],
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          fontFamily: 'Elmessiri'),
-                                    ), //Retriveing from the DB
-
-                                    subtitle: Text(
-                                      'حي ' + data[index]['District'],
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          fontFamily: 'Elmessiri'),
-                                    ), //Retriveing from the DB
+                                  style: ElevatedButton.styleFrom(
+                                    primary: myArray.contains(item.id)
+                                        ? const Color.fromARGB(255, 38, 25, 152)
+                                        : const Color.fromRGBO(212, 175, 55, 1),
+                                    minimumSize: const Size(30, 30),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
                                   ),
-                                );
+                                ),
+                                trailing: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(18),
+                                    child: Image.network(
+                                      item['Image'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                title: Text(
+                                  item['Name'],
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontFamily: 'Elmessiri',
+                                  ),
+                                ), //Retriveing from the DB
+                                subtitle: Text(
+                                  'حي ' + item['District'],
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontFamily: 'Elmessiri',
+                                  ),
+                                ), //Retriveing from the DB
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),

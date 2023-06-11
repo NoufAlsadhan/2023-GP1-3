@@ -13,7 +13,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 final _formKey = GlobalKey<FormState>();
 final _controller = TextEditingController();
-final TextEditingController _mosquenum = TextEditingController();
 final TextEditingController _InameController = TextEditingController();
 final TextEditingController _IphoneController = TextEditingController();
 final TextEditingController _IidController = TextEditingController();
@@ -23,12 +22,17 @@ final TextEditingController _MidController = TextEditingController();
 var db = FirebaseFirestore.instance;
 
 class createAccounts extends StatefulWidget {
+  final String? mnum;
+
+  const createAccounts({this.mnum});
   _createAccountsState createState() => _createAccountsState();
 }
 
 class _createAccountsState extends State<createAccounts> {
 //Sending sms with creditials
   final _controller = TextEditingController();
+  final TextEditingController _mosquenum = TextEditingController();
+  bool enable = true;
 
   @override
   void initState() {
@@ -39,7 +43,11 @@ class _createAccountsState extends State<createAccounts> {
     _MnameController.text = '';
     _MidController.text = '';
     _MphoneController.text = '';
-    _mosquenum.text = '';
+    if (widget.mnum != '' && widget.mnum != null) {
+      _mosquenum.text = widget.mnum.toString();
+      _isDuplicate(widget.mnum!);
+      enable = false;
+    }
   }
 
   bool _visible = false;
@@ -83,7 +91,12 @@ class _createAccountsState extends State<createAccounts> {
                     child: Icon(Icons.arrow_back),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (widget.mnum != '' && widget.mnum != null) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                 ),
               ],
@@ -109,6 +122,7 @@ class _createAccountsState extends State<createAccounts> {
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
+                              enabled: enable,
                               controller: _mosquenum,
                               onFieldSubmitted: _isDuplicate,
                               keyboardType: TextInputType.number,
@@ -640,11 +654,11 @@ class _createAccountsState extends State<createAccounts> {
 
     sending_SMS(
         //Sending SMS with credentials
-        'تم إنشاء حساب لك في تطبيق محراب, نرجو الدخول برقم الهوية وكلمة المرور المرفقة $imamPassword مع العلم أنه يجب عليك تغيير كلمة المرور عند دخولك للتطبيق, شكرًا لاستخدامك محراب.',
+        'تم تأكيد التحاقك بتطبيق محراب, نرجو استخدام رقم الهوية الوطنية وكلمة المرور المرفقة $imamPassword للدخول إلى التطبيق, مع العلم أنه يجب عليك تغيير كلمة المرور عند دخولك, شكرًا لاستخدامك محراب.',
         [iphone]);
 
     sending_SMS(
-        'تم إنشاء حساب لك في تطبيق محراب, نرجو الدخول برقم الهوية وكلمة المرور المرفقة $muathenPassword مع العلم أنه يجب عليك تغيير كلمة المرور عند دخولك للتطبيق, شكرًا لاستخدامك محراب.',
+        'تم تأكيد التحاقك بتطبيق محراب, نرجو استخدام رقم الهوية الوطنية وكلمة المرور المرفقة $muathenPassword للدخول إلى التطبيق, مع العلم أنه يجب عليك تغيير كلمة المرور عند دخولك, شكرًا لاستخدامك محراب.',
         [mphone]);
   }
 
@@ -654,7 +668,15 @@ class _createAccountsState extends State<createAccounts> {
     Widget continueButton = TextButton(
       child: Text("حسنًا", style: TextStyle(fontFamily: 'Elmessiri')),
       onPressed: () {
-        Navigator.pop(context);
+        if (widget.mnum != '' && widget.mnum != null) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+        } else {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       },
     );
     AlertDialog alert = AlertDialog(
@@ -729,6 +751,7 @@ class _createAccountsState extends State<createAccounts> {
 
         if (docSnapshot.exists && docSnapshot != null) {
           var data = docSnapshot.data();
+          bool isAdded = data!['added'];
           DocumentReference imamRef = data!["Imam"];
           DocumentSnapshot imamDocSnapshot = await imamRef.get();
           DocumentReference muathenRef = data["Muathen"];
@@ -736,13 +759,26 @@ class _createAccountsState extends State<createAccounts> {
           if (imamDocSnapshot.exists &&
               imamDocSnapshot != null &&
               muathenDocSnapshot.exists &&
-              muathenDocSnapshot != null) {
+              muathenDocSnapshot != null &&
+              isAdded) {
             _InameController.text = imamDocSnapshot.get('الاسم');
             _MnameController.text = muathenDocSnapshot.get('الاسم');
             _IphoneController.text = imamDocSnapshot.get('رقم الجوال');
             _MphoneController.text = muathenDocSnapshot.get('رقم الجوال');
             _IidController.text = imamDocSnapshot.id;
             _MidController.text = muathenDocSnapshot.id;
+          } else {
+            setState(() {
+              DuplicateNum = true;
+              DuplicateNumError =
+                  'المسجد ليس من ضمن المساجد المتوفرة في قاعدة البيانات';
+              _IidController.clear();
+              _IphoneController.clear();
+              _InameController.clear();
+              _MidController.clear();
+              _MphoneController.clear();
+              _MnameController.clear();
+            });
           }
         } else {
           setState(() {

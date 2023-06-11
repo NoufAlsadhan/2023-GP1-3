@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mehrab/AdminLogin.dart';
+import 'package:mehrab/createAccounts.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,9 +24,6 @@ final TextEditingController _ImamName = TextEditingController();
 final TextEditingController _MuathenName = TextEditingController();
 final TextEditingController _MosqueImage = TextEditingController();
 var db = FirebaseFirestore.instance;
-
-List<String> itemsList = ['خالد', 'محمد', 'عاصم', 'صالح', 'عبدالله'];
-String? selectedItem = 'خالد';
 
 class AddMosque extends StatefulWidget {
   _AddMosqueState createState() => _AddMosqueState();
@@ -60,11 +58,13 @@ class _AddMosqueState extends State<AddMosque> {
   var validNum = true;
   var validUrl = true;
   var validMname = true;
+  bool _isChecked = false;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     bool isButtonEnabled = false;
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Mehrab',
@@ -411,7 +411,30 @@ class _AddMosqueState extends State<AddMosque> {
                             child: Text(' جميع الحقول مطلوبة ',
                                 style: TextStyle(color: Colors.red))),
                         //feedback of filling all fields
-
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: _isChecked,
+                                  activeColor: Color.fromRGBO(212, 175, 55, 1),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      _isChecked = newValue ?? false;
+                                      print(_isChecked);
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  'إنشاء حسابات الإمام والمؤذن',
+                                  style: TextStyle(
+                                      fontSize: 14.0, fontFamily: 'Elmessiri'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Container(
                             height: 80,
                             padding: const EdgeInsets.all(20),
@@ -593,7 +616,15 @@ class _AddMosqueState extends State<AddMosque> {
       child: Text("إضافة", style: TextStyle(fontFamily: 'Elmessiri')),
       onPressed: () {
         //Add(MosqueData);
-        Navigator.pop(context);
+        if (_isChecked == false) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => createAccounts(mnum: _Mosquenum.text)));
+        }
 
         //_Mosquenum.clear();
         _MosqueNameController.clear();
@@ -604,7 +635,7 @@ class _AddMosqueState extends State<AddMosque> {
         imageUrl.clear();
 
         Add();
-        _Mosquenum.clear();
+        // _Mosquenum.clear();
       },
     );
     // set up the AlertDialog
@@ -636,7 +667,6 @@ class _AddMosqueState extends State<AddMosque> {
   } //confirmation msg after validating all input and clicking add button
 
   void Add() {
-    print("lama");
     db
         .collection('Mosque')
         .doc(_Mosquenum.text)
