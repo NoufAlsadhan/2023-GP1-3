@@ -190,35 +190,6 @@ class _ReadlistviewState extends State<Readlistview> {
       // Add the documents for this district to the sortedData list
       sortedData.addAll(value);
     });
-
-    /*List<List<dynamic>> groupByDistrict(List<dynamic> data) {
-      final Map<String, List<dynamic>> groupedData = {};
-
-      for (final element in data) {
-        final district = element['District'];
-        if (!groupedData.containsKey(district)) {
-          groupedData[district] = [];
-        }
-        if (groupedData != null && groupedData[district] != null) {
-          groupedData[district]?.add(element);
-        }
-      }
-
-      return groupedData.values.toList();
-    }*/
-    /* void toggleJoin(int index, List<dynamic> data) {
-      final element = data[index];
-      final id = element['id'];
-      if (myArray == null) {
-        myArray = <int>[];
-      }
-      if (myArray.contains(id)) {
-        myArray.remove(id);
-      } else {
-        myArray.add(id);
-      }
-      setState(() {});
-    }*/
     return Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
